@@ -14,17 +14,30 @@
                 <nav>
                     <ul>
                         <li><a href="" class="btn">Madrid Airbnb Data Analyzer</a></li>
-                        <!--<input type="text" placeholder="Search for keyword...">
-                        <button type="submit" name = "searching" id = "searchBnt" value="searchBnt"> Search </button>-->
+                        
                     </ul>
                 </nav>
             </div>
             <div class="content">
-                <form action="response" method="POST">
+                <div class="wrapper">
+                <!--Dropdown menu
+                <select name = menu method='GET' action = '/'>
+                    {% for menu in menu%}
+                    <option value = "{{menu}}" selected>{{menu}}</option>"
+                    {% endfor %}
+                    </select>--->
+                    <form class="search_key" method="POST">
+                        <input type="text" placeholder="Search for keyword..." name="w">
+                        <button type="submit" id="search_bnt"> Search </button>
+                    </form>
+                </div>
+                <!--<form action="response" method="POST">
                     <button type="submit" name="requestBnt">Request</button>
-                </form>
-                {% block content %}
-                {% endblock %}
+                </form>-->
+                <div class="csvDisplay">
+                    {% block content %}
+                    {% endblock %}
+                </div> 
             </div>     
             <!--<div id="map">
                 <script

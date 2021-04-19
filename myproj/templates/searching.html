@@ -1,0 +1,32 @@
+{% extends "index.html" %}
+{% block content %}
+ <!--<h1>{{word}}</h1>-->
+<table class="blueTable">
+    <thead>
+    <tr>
+        {% for i in num_title %}
+        <td>{{title[i]}}</td>
+        {% endfor %}
+    </tr>
+    </thead>
+    <tfoot>
+    <!--<tr>
+    <td colspan="42"> 
+    <div class="links"><a href="#">&laquo;</a> <a class="active" href="#">1</a> <a href="#">2</a> <a href="#">3</a> <a href="#">4</a> <a href="#">&raquo;</a></div>
+    </td>
+    </tr>-->
+    <h1>OUTPUT AT MOST 40 ROWS </h1>
+    </tfoot>
+    <tbody>
+        <tr>
+            {% for i in num_total %}
+            <tr>
+                {% for j in num_list %}
+                    <td>{{arr[i][j]}}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tr>
+    </tbody>
+</table>
+{% endblock %}
