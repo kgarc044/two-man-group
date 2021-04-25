@@ -14,19 +14,28 @@
                 <nav>
                     <ul>
                         <li><a href="" class="btn">Madrid Airbnb Data Analyzer</a></li>
-                        
                     </ul>
                 </nav>
             </div>
+            <div class="csvUpdate">
+                <form class="Update_key" method="POST" action="/update">
+                    <!-- Dropdown menu -->
+                    <select name = "fname">
+                        {% for f_name_list in f_name_list%}
+                        <option value = "{{f_name_list}}" selected >{{f_name_list}}</option>"
+                        {% endfor %}
+                    </select>
+                    <button type="submit" id="update_bnt" > UPDATE CSV </button>
+                </form>
+            </div>
             <div class="content">
                 <div class="wrapper">
-                <!--Dropdown menu
-                <select name = menu method='GET' action = '/'>
-                    {% for menu in menu%}
-                    <option value = "{{menu}}" selected>{{menu}}</option>"
-                    {% endfor %}
-                    </select>--->
-                    <form class="search_key" method="POST">
+                    <form class="search_key" method="POST" action="/search">
+                        <select name = "sel">
+                        {% for title in title%}
+                        <option value = "{{title}}" selected >{{title}}</option>"
+                        {% endfor %}
+                        </select>
                         <input type="text" placeholder="Search for keyword..." name="w">
                         <button type="submit" id="search_bnt"> Search </button>
                     </form>

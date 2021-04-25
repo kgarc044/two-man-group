@@ -4,8 +4,8 @@
 }
 
 body{
-    height: auto;
-    width: auto;
+    height: 100%;
+    width: 100%;
     background-color: rgb(0, 0, 0);
 }
 
@@ -60,25 +60,44 @@ nav ul li a{
     box-shadow: 3px 8px 22px rgba(94, 28,68,0.15);
 }
 
+.csvUpdate{
+    height: 100px;
+    width: 300px;
+    display: grid;
+    flex-direction: row;
+    align-items: center ;
+    position: relative;
+    top: 4%;
+    /* border-color: rgb(85, 85, 107);
+    border-style: solid;  */
+}
+
+.csvUpdate select{
+  width: 150px;
+  height: 50px;
+  border-radius: 20px;
+}
+
 .content{
     height: 100%;
     width: 100%;
     display: flex;
     justify-content: top;
-    align-items: center;
+    align-items: center ;
     color: rgb(255, 255, 255);
     /* border-color: blue;
-    border-style: solid; */
+    border-style: solid;  */
 }
 
 .content .wrapper{
-    width: 500px;
+    width: 800px;
     height: 100px;
+    display: flex;
     /* border-color: chocolate;
-    border-style: solid; */
+    border-style: solid;  */
     position: relative;
     bottom: 50%;
-    left: 35%;
+    left: 20%;
 }
 
 .content .csvDisplay{
@@ -91,8 +110,14 @@ nav ul li a{
     bottom:-300px;
 }
 
+.content select{
+  width: 150px;
+  height: 50px;
+  border-radius: 20px;
+}
+
 .content input{
-    width: 80%;
+    width: 350px;
     max-width: 840px;
     height: 55px;
     border-radius: 30px;
@@ -108,6 +133,14 @@ nav ul li a{
     font-weight: 500;
     font-size: 16px
 }
+#update_bnt{
+  width: 90px;
+  height: 55px;
+  background: linear-gradient(45deg, #aebddf, rgb(24, 23, 23));
+  border-radius: 6px;
+  padding: 10px 20px;
+  color: rgb(255, 255, 255);
+}
 
 #search_bnt{
     width: 90px;
@@ -116,8 +149,6 @@ nav ul li a{
     border-radius: 6px;
     padding: 10px 20px;
     color: rgb(255, 255, 255);
-    /* border-color: pink;
-    border-style: solid; */
 }
 
 #map{
