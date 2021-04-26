@@ -24,10 +24,12 @@
                         {% for f_name_list in f_name_list%}
                         <option value = "{{f_name_list}}" selected >{{f_name_list}}</option>"
                         {% endfor %}
+                        
                     </select>
                     <button type="submit" id="update_bnt" > UPDATE CSV </button>
                 </form>
             </div>
+            
             <div class="content">
                 <div class="wrapper">
                     <form class="search_key" method="POST" action="/search">
@@ -39,7 +41,14 @@
                         <input type="text" placeholder="Search for keyword..." name="w">
                         <button type="submit" id="search_bnt"> Search </button>
                     </form>
+                    <div class="backupblock">
+                        <form class ="backup" method="POST" action="/backup">
+                            <button type="Back Up File" id = "backup_bnt">Back Up</button>
+                        </form>
+                    </div> 
+                    
                 </div>
+                <h1 class = "bkup-msg">{{BackUpMsg}}</h1>
                 <!--<form action="response" method="POST">
                     <button type="submit" name="requestBnt">Request</button>
                 </form>-->
@@ -57,4 +66,3 @@
         </div>
     </body>
 </html>
-
