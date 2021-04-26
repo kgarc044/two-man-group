@@ -26,10 +26,32 @@
                 {% for j in num_list %}
                     <td>{{arr[i][0][j]}}</td>
                 {% endfor %}
-                <form class="editrow" method="POST" action="/edit">
+                <!-- <form class="editrow" method="POST" action="/edit">
                     <td><button value="{{arr[i][1], i}}" name = "edit_row"><img src="{{ url_for('static', filename='images/edit.jpg') }}" alt="edit"></button>
                     </td>
-                </form>
+                </form> -->
+                <td>
+                    <div class="popup" id="popup-1">
+                        <div class="content">
+                         <div class="close-btn" onclick="togglePopup()">
+                          ×</div>
+    
+                     <h1>Update fields</h1> 
+                        {% for title in title%}
+                       <div id="input-field" class="input-field"><p> {{title}} </p><input id="input-something" value="insert" ="text" class="validate"></div>
+                        {% endfor %}
+                         <button class="second-button">Confirm</button>
+                        </div>
+                       </div>
+                       <button onclick="togglePopup()" class="first-button"><img src="{{ url_for('static', filename='images/edit.jpg') }}" alt="logo"></button>
+                     <script>
+                      function togglePopup() {
+                      document.getElementById("popup-1")
+                       .classList.toggle("active");
+                     }
+                     </script>
+                    </div>
+                </td>
                 <form class="delrow" method="POST" action="/del">
                     <td><button value="{{arr[i][1], i}}" name = "delete_row"><img src="{{ url_for('static', filename='images/trash.jpg') }}" alt="trash"></button>
                     </td>
