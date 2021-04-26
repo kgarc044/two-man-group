@@ -3,8 +3,10 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from time import time
 import re
+import glob
 
 from parse_json import read_json # Tristan's parse_json functions
+from parse_json import dict_to_json
 
 app = Flask(__name__)
 app.secret_key = 'super secret key'
@@ -19,9 +21,16 @@ pattern = r",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"
 #     'neighbourhoods' : read_json(r'E:\CS180\Web\myproj\data\neighbourhoods.json'),\
 #     'reviews' : read_json(r'E:\CS180\Web\myproj\data\reviews.json')}
 
-files = {'listings' : read_json(r'data/listings.json'),\
-    'neighbourhoods' : read_json(r'data/neighbourhoods.json'),\
-    'reviews' : read_json(r'data/reviews.json')}
+file_name = []
+files = {}
+file_list = glob.glob('data\*.json')
+json_path = []
+for i in file_list:
+    json_path.append(i)
+for i in file_list:
+    file_name.append(re.findall('(?<=\\\\).*?(?=\.)',i))
+for x,i in enumerate(file_name):
+    files[i[0]] = read_json(json_path[x])
 
 #listings_detailed = read_json('data/listings_detailed.json')
 #reviews_detailed = read_json('data/reviews_detailed.json')
@@ -62,7 +71,6 @@ def update():
         title=title, num_title=num_title, arr=arr, num_list=num_list, num_total=num_total) 
 @app.route('/search', methods = ['POST'])
 def key_Search():
-
     f_name_list = files.keys()
     arr=[]
     file = session.get('file',None)
@@ -71,7 +79,7 @@ def key_Search():
     select = request.form['sel']
     num_title = range(len(title))
 
-    print(word)
+    #print(word)
 
     for i in range(len(files[file])):
         if word in files[file][i][select]:
@@ -155,11 +163,20 @@ def edit():
 @app.route('/export', methods = ['POST'])
 def export():
     f_name_list = files.keys()
-    for file in f_name_list
+    for file in f_name_list:
         dict_to_json(file, 'data/' + file + '.json')
     return render_template('searching.html', f_name_list=f_name_list)
 
-
+@app.route('/backup', methods = ['POST'])
+def backupFunction():
+    global files
+    file = session.get('file',None)
+    f_name_list = files.keys()
+    title = list(files[file][0].keys()) # get keys from first entry
+    dict_to_json(files[file],"data/"+file+"-backup.json")
+    BackUpMsg = "New "+file+" has been backed up!!!"
+    files[file+"-backup"]=read_json("data/"+file+"-backup.json")
+    return render_template('index.html',BackUpMsg=BackUpMsg, f_name_list=f_name_list,title=title)
 
 if __name__ == "__main__":
     app.run(debug=True)
