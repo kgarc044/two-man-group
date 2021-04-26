@@ -8,6 +8,7 @@
         <td>{{title[i]}}</td>
         {% endfor %}
         <td>Edit</td>
+        <td>Delete</td>
     </tr>
     </thead>
     <tfoot>
@@ -23,10 +24,16 @@
             {% for i in num_total %}
             <tr>
                 {% for j in num_list %}
-                    <td>{{arr[i][j]}}</td>
+                    <td>{{arr[i][0][j]}}</td>
                 {% endfor %}
-                <td><a href = "#"><img src="{{ url_for('static', filename='images/edit.jpg') }}" alt="logo"></a>
-                <a href = "#"><img src="{{ url_for('static', filename='images/trash.jpg') }}" alt="logo"></a></td>
+                <form class="editrow" method="POST" action="/edit">
+                    <td><button value="{{arr[i][1], i}}" name = "edit_row"><img src="{{ url_for('static', filename='images/edit.jpg') }}" alt="edit"></button>
+                    </td>
+                </form>
+                <form class="delrow" method="POST" action="/del">
+                    <td><button value="{{arr[i][1], i}}" name = "delete_row"><img src="{{ url_for('static', filename='images/trash.jpg') }}" alt="trash"></button>
+                    </td>
+                </form>
             </tr>
             {% endfor %}
         </tr>
