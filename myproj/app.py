@@ -177,6 +177,5 @@ def backupFunction():
     BackUpMsg = "New "+file+" has been backed up!!!"
     files[file+"-backup"]=read_json("data/"+file+"-backup.json")
     return render_template('index.html',BackUpMsg=BackUpMsg, f_name_list=f_name_list,title=title)
-
 if __name__ == "__main__":
     app.run(debug=True)
