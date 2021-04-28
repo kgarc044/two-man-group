@@ -39,11 +39,8 @@ for x,i in enumerate(file_name):
 def index():
     f_name_list = files.keys()
     session.clear()
-<<<<<<< HEAD
     return render_template('index.html',f_name_list=f_name_list, enumerate=enumerate)#, menu=menu)
-=======
-    return render_template('searching.html',f_name_list=f_name_list)#, menu=menu)
->>>>>>> bc5f2b200e6dd6f77f523fb3cebfb4d86fad58b3
+
 @app.route('/update', methods =['POST'])
 def update():
     f_name_list = files.keys()
@@ -71,14 +68,10 @@ def update():
         session['num_list'] = len(arr[0][0])
     session['num_total'] = min(len(arr), 40)
     # session.clear()
-<<<<<<< HEAD
-    
+
     return render_template('searching.html',f_name_list=f_name_list, file=file,
         title=title, num_title=num_title, arr=arr, num_list=num_list, num_total=num_total, enumerate=enumerate) 
-=======
-    return render_template('searching.html',f_name_list=f_name_list, file=file, 
-        title=title, num_title=num_title, arr=arr, num_list=num_list, num_total=num_total) 
->>>>>>> bc5f2b200e6dd6f77f523fb3cebfb4d86fad58b3
+
 @app.route('/search', methods = ['POST'])
 def key_Search():
     f_name_list = files.keys()
@@ -89,23 +82,10 @@ def key_Search():
     select = request.form['sel']
     num_title = range(len(title))
 
-<<<<<<< HEAD
-=======
-    #print(word)
->>>>>>> bc5f2b200e6dd6f77f523fb3cebfb4d86fad58b3
-
     for i in range(len(files[file])):
         if word in files[file][i][select]:
             arr.append((list(files[file][i].values()), i))
 
-<<<<<<< HEAD
-=======
-    # print(arr[0])
-
-    # for entry in files[file]:
-    #     if word in entry[select]:
-    #         arr.append(list(entry.values()))
->>>>>>> bc5f2b200e6dd6f77f523fb3cebfb4d86fad58b3
     if len(arr) == 0:
         num_list = 0
     else:
@@ -134,31 +114,11 @@ def delfunc():
     num_title = range(len(title))
 
     index = request.values['delete_row']
-    index = index.replace('(', '')
-    index = index.replace(')', '')
-    test = index.split(', ')
-
-
-<<<<<<< HEAD
-=======
-@app.route('/del', methods = ['POST'])
-def delfunc():
-    f_name_list = files.keys()
-    arr = session.get('arr', None)
-    file = session.get('file', None)
-    num_list = range(session.get('num_list', None))
-    num_total = range(session.get('num_total', None) - 1)
-    title = list(files[file][0].keys())
-    num_title = range(len(title))
-
-    index = request.values['delete_row']
 
     index = index.replace('(', '')
     index = index.replace(')', '')
     test = index.split(', ')
 
-
->>>>>>> bc5f2b200e6dd6f77f523fb3cebfb4d86fad58b3
     print(files[file][int(test[0])])
     print(arr[int(test[1])])
 
@@ -168,26 +128,13 @@ def delfunc():
     del files[file][int(test[0])]
     del arr[int(test[1])]
 
-<<<<<<< HEAD
     session['num_total'] = session.get('num_total', None) -1
     
-
     return render_template('searching.html', f_name_list = f_name_list, file=file, arr=arr,
         title=title, num_title=num_title, num_list=num_list, num_total=num_total, index=index, enumerate=enumerate)
 
 @app.route('/edit', methods = ['POST'])
 def edit():
-    global files
-=======
-    session['num_total'] = session.get('num_total', None) - 1
-    
-
-    return render_template('searching.html', f_name_list = f_name_list, file=file, arr=arr,
-        title=title, num_title=num_title, num_list=num_list, num_total=num_total, index=index)
-
-@app.route('/edit', methods = ['POST'])
-def edit():
->>>>>>> bc5f2b200e6dd6f77f523fb3cebfb4d86fad58b3
     f_name_list = files.keys()
     arr = session.get('arr', None)
     file = session.get('file', None)
@@ -196,7 +143,6 @@ def edit():
     title = list(files[file][0].keys())
     num_title = range(len(title))
 
-<<<<<<< HEAD
     index=[]
     index1=int(request.values['row'])
     for i in num_title:
@@ -205,18 +151,6 @@ def edit():
     session['arr'] = arr
     return render_template('searching.html', f_name_list = f_name_list, file=file, arr=arr, index1=index1,
         title=title, num_title=num_title, num_list=num_list, num_total=num_total, index=index, enumerate=enumerate)
-=======
-    index = request.values['edit_row']
-
-    index = index.replace('(', '')
-    index = index.replace(')', '')
-    test = index.split(', ')
-
-    print(test)
-
-    return render_template('searching.html', f_name_list = f_name_list, file=file, arr=arr,
-        title=title, num_title=num_title, num_list=num_list, num_total=num_total, index=index)
->>>>>>> bc5f2b200e6dd6f77f523fb3cebfb4d86fad58b3
 
 @app.route('/export', methods = ['POST'])
 def export():
