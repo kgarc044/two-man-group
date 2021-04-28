@@ -31,28 +31,29 @@
                     </td>
                 </form> -->
                 <td>
+                    <button onclick="togglePopup(this.id)" name="edit_{{i}}" class="first-button" id = {{i}}>
+                        <img src="{{ url_for('static', filename='images/edit.jpg') }}" alt="logo">{{i}}
+                    </button>
+                     <script>
+                      function togglePopup(clicked_id) {
+                            document.getElementById("input-field").innerHTML = '{% for idx,title in enumerate(title) %}<p>{{title}}</p>\
+                            row: '+clicked_id+' col: {{idx}} <input id="input-something" name = "h{{idx}}" value="" ="text" class="validate">{% endfor %}\
+                            <button id="second-button" value="'+clicked_id+'" name="row">Confirm</button></div>';
+                            document.getElementById("popup-1").classList.toggle("active");
+                      }
+                     </script>
                     <div class="popup" id="popup-1">
                         <div class="content">
-                         <div class="close-btn" onclick="togglePopup()">
-                          ×</div>
-                     <h1>Update fields</h1> 
-                        {% for title in title%}
-                       <div id="input-field" class="input-field"><p> {{title}} </p><input id="input-something" value="insert" ="text" class="validate"></div>
-                        {% endfor %}
-                         <button class="second-button">Confirm</button>
+                            <div class="close-btn" onclick="togglePopup()">×</div>
+                                <h1>Update fields</h1> 
+                        <form class = "update_row" method ="POST" action="\edit">
+                        <div id="input-field" class="input-field">
+                        </form>
                         </div>
-                       </div>
-                       <button onclick="togglePopup()" class="first-button"><img src="{{ url_for('static', filename='images/edit.jpg') }}" alt="logo"></button>
-                     <script>
-                      function togglePopup() {
-                      document.getElementById("popup-1")
-                       .classList.toggle("active");
-                     }
-                     </script>
                     </div>
                 </td>
                 <form class="delrow" method="POST" action="/del">
-                    <td><button value="{{arr[i][1], i}}" name = "delete_row"><img src="{{ url_for('static', filename='images/trash.jpg') }}" alt="trash"></button>
+                    <td><button value="{{arr[i][1], i}}" name = "delete_row"><img src="{{ url_for('static', filename='images/trash.jpg') }}" alt="trash">{{i}}</button>
                     </td>
                 </form>
             </tr>

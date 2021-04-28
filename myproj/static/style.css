@@ -30,7 +30,7 @@ body{
     /* border-style: solid;
     border-color: red; */
     display: flex;
-    align-items: center; 
+    align-items: center;
 }
 
 .nav{
@@ -197,9 +197,16 @@ h1.bkup-msg{
   position: absolute;
   top: 50%;
   left: 50%;
+<<<<<<< HEAD
+  flex-direction: column;
+  transform: translate(-50%,-150%) scale(0);
+  width: 1000px;
+  height: auto;
+=======
   transform: translate(-50%,-150%) scale(0);
   width: 1000px;
   height: 450px;
+>>>>>>> bc5f2b200e6dd6f77f523fb3cebfb4d86fad58b3
   z-index: 2;
   text-align: center;
   padding: 20px;
@@ -230,12 +237,20 @@ h1.bkup-msg{
   transform: translate(-50%,-50%) scale(1);
 }
 
+#second-button{
+  position: absolute;
+  left: 900;
+  top: 30;
+}
 /*----------CVS Table--------*/
+
 table.blueTable {
-    border: 1px solid #1C6EA4;
+    border: 1px solid #080b0e;
     background-color: #EEEEEE;
     width: 100%;
-    text-align: left;
+    text-align: center;
+    font-family:serif;
+    font-size: large;
     border-collapse: collapse;
   }
   table.blueTable td, table.blueTable th {
@@ -246,10 +261,12 @@ table.blueTable {
     font-size: 13px;
   }
   table.blueTable tr:nth-child(even) {
-    background: #D0E4F5;
+    /*background: #D0E4F5;*/
+    background: #5d7185;
   }
   table.blueTable thead {
-    background: #1C6EA4;
+    /*background: #1C6EA4;*/
+    background: #394953;
     background: -moz-linear-gradient(top, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
     background: -webkit-linear-gradient(top, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
     background: linear-gradient(to bottom, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
@@ -288,3 +305,12 @@ table.blueTable {
     padding: 2px 8px;
     border-radius: 5px;
   }
+<<<<<<< HEAD
+
+  td {
+    display: table-cell;
+    vertical-align: inherit;
+    align-items: center;
+}
+=======
+>>>>>>> bc5f2b200e6dd6f77f523fb3cebfb4d86fad58b3
