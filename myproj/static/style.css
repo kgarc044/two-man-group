@@ -93,7 +93,7 @@ nav ul li a{
 }
 
 .content .wrapper{
-    width: 800px;
+    width: 1000px;
     height: 100px;
     display: flex;
     /* border-color: chocolate;
@@ -110,6 +110,15 @@ nav ul li a{
     top: 20px;
     left: 20px;
 }
+
+.content .wrapper .insertblock{
+  width: 200px;
+  height: 60px;
+  position: relative;
+  top: 20px;
+  left:20px;
+}
+
 .content .csvDisplay{
     width: 89.7%;
     height: 1000px;
@@ -169,6 +178,14 @@ nav ul li a{
   padding: 10px 20px;
   color: rgb(255, 255, 255);
 
+}
+#insert_bnt{
+  width: 90px;
+  height: 55px;
+  background: linear-gradient(45deg, #aebddf, rgb(24, 23, 23));
+  border-radius: 6px;
+  padding: 10px 20px;
+  color: rgb(255, 255, 255);
 }
 
 h1.bkup-msg{

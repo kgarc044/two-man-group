@@ -44,18 +44,37 @@
                         <form class ="backup" method="POST" action="/backup">
                             <button type="Back Up File" id = "backup_bnt">Back Up</button>
                         </form>
-                    </div> 
-                    
+                    </div>
+                    <div class = "insertblock">
+                        <button onclick="togglePopup2('0')" name="insert" id="insert_bnt">Insert</button>
+                        <script>
+                            function togglePopup2(clicked_id) {
+                                document.getElementById("input-field").innerHTML = '{% for idx,title in enumerate(title) %}<p>{{title}}</p>\
+                                Field: {{idx + 1}} <input id="input-something" name = "h{{idx}}" value="" ="text" class="validate">{% endfor %}\
+                                <button id="second-button" value="'+clicked_id+'" name="row">Confirm</button></div>';
+                                document.getElementById("popup-1").classList.toggle("active");
+                            }
+                        </script>
+                        <div class="popup" id="popup-1">
+                            <div class="content">
+                                <div class="close-btn" onclick="togglePopup2()">×</div>
+                                    <h1>Insert fields</h1> 
+                            <form class = "insert_row" method ="POST" action="\insert">
+                                <div id="input-field" class="input-field"> </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-                <h1 class = "bkup-msg">{{BackUpMsg}}</h1>
-                <!--<form action="response" method="POST">
-                    <button type="submit" name="requestBnt">Request</button>
-                </form>-->
-                <div class="csvDisplay">
-                    {% block content %}
-                    {% endblock %}
-                </div> 
-            </div>     
+            </div>
+            <h1 class = "bkup-msg">{{BackUpMsg}}</h1>
+            <!--<form action="response" method="POST">
+                <button type="submit" name="requestBnt">Request</button>
+            </form>-->
+            
+            <div class="csvDisplay">
+                {% block content %}
+                {% endblock %}
+            </div>
             <!--<div id="map">
                 <script
                 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCyTM4ig_xaNAbUnwNKD4sv0rneduJ0Zv4&callback=initMap&libraries=&v=weekly"

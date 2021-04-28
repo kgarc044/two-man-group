@@ -119,8 +119,8 @@ def delfunc():
     index = index.replace(')', '')
     test = index.split(', ')
 
-    print(files[file][int(test[0])])
-    print(arr[int(test[1])])
+    # print(files[file][int(test[0])])
+    # print(arr[int(test[1])])
 
     for i in range(int(test[1]),session.get('num_total', None)):
         arr[i] = (arr[i][0], int(arr[i][1]) - 1)
@@ -139,18 +139,35 @@ def edit():
     arr = session.get('arr', None)
     file = session.get('file', None)
     num_list = range(session.get('num_list', None))
-    num_total = range(session.get('num_total', None) - 1)
+    num_total = range(session.get('num_total', None))
     title = list(files[file][0].keys())
     num_title = range(len(title))
 
-    index=[]
-    index1=int(request.values['row'])
+    fields=[]
+    index=int(request.values['row'])
+    temp = dict(zip(title, arr[index][0]))
     for i in num_title:
-        arr[index1][0][i] = request.form['h'+str(i)]
-        files[file][index1][title[i]] = request.form['h'+str(i)]
+        fields.append(request.form['h'+str(i)])
+        arr[index][0][i] = request.form['h'+str(i)]
+        
+    file_index = files[file].index(temp)
+    temp2 = dict(zip(title, fields))
+    # print(temp2)
+    # print(file_index)
+    files[file][file_index] = temp2
+    
+    # for i in num_title:
+    #     fields.append(request.form['h'+str(i)])
+    #     arr[index1][0][i] = request.form['h'+str(i)]
+    #     files[file][index1][title[i]] = request.form['h'+str(i)]
+    
+    # print(files[file].index(temp))
+    
     session['arr'] = arr
-    return render_template('searching.html', f_name_list = f_name_list, file=file, arr=arr, index1=index1,
-        title=title, num_title=num_title, num_list=num_list, num_total=num_total, index=index, enumerate=enumerate)
+
+    return render_template('searching.html', f_name_list = f_name_list, file=file, arr=arr, index1=index,
+        title=title, num_title=num_title, num_list=num_list, num_total=num_total, enumerate=enumerate)
+    # return render_template('searching.html', f_name_list=f_name_list, enumerate=enumerate)
 
 @app.route('/export', methods = ['POST'])
 def export():
@@ -168,7 +185,29 @@ def backupFunction():
     dict_to_json(files[file],"data/"+file+"-backup.json")
     BackUpMsg = "New "+file+" has been backed up!!!"
     files[file+"-backup"]=read_json("data/"+file+"-backup.json")
-    return render_template('index.html',BackUpMsg=BackUpMsg, f_name_list=f_name_list,title=title)
+    return render_template('index.html',BackUpMsg=BackUpMsg, f_name_list=f_name_list,title=title, enumerate=enumerate)
+
+@app.route('/insert', methods = ['POST'])
+def insert():
+    f_name_list = files.keys()
+    arr = session.get('arr', None)
+    file = session.get('file', None)
+    num_list = range(session.get('num_list', None))
+    num_total = range(session.get('num_total', None))
+    title = list(files[file][0].keys())
+    num_title = range(len(title))
+
+    fields = []
+    for i in num_title:
+        fields.append(request.form['h'+str(i)])
+    arr.append(((fields[0], fields[1]), len(arr)))
+
+    temp = dict(zip(title, fields))
+
+    files[file].append(temp)
+
+    return render_template('searching.html', f_name_list = f_name_list, file=file, arr=arr,
+        title=title, num_title=num_title, num_list=num_list, num_total=num_total, enumerate=enumerate)
 
 if __name__ == "__main__":
     app.run(debug=True)
