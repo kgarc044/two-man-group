@@ -4,6 +4,8 @@ from flask import Flask, render_template, request, session
 from time import time
 import re
 import glob
+import os
+from multiprocessing import Process, Pipe
 
 from parse_json import read_json # Tristan's parse_json functions
 from parse_json import dict_to_json
@@ -15,22 +17,74 @@ rMsg = "Hello from Server!"
 arr = ['']
 pattern = r",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"
 
-# load JSON files to dict of lists of dict; need to check if JSON or CSV is faster. CSV is smaller
-# files = {'calendar' : read_json(r'E:\CS180\Web\myproj\data\calendar.json'),\
-#     'listings' : read_json(r'E:\CS180\Web\myproj\data\listings.json'),\
-#     'neighbourhoods' : read_json(r'E:\CS180\Web\myproj\data\neighbourhoods.json'),\
-#     'reviews' : read_json(r'E:\CS180\Web\myproj\data\reviews.json')}
 
-file_name = []
-files = {}
-file_list = glob.glob('data\*.json')
-json_path = []
-for i in file_list:
-    json_path.append(i)
-for i in file_list:
-    file_name.append(re.findall('(?<=\\\\).*?(?=\.)',i))
-for x,i in enumerate(file_name):
-    files[i[0]] = read_json(json_path[x])
+# load JSON files to dict of lists of dict; need to check if JSON or CSV is faster. CSV is smaller
+path = os.path.join(os.path.curdir, r'data')
+
+
+# to switch to non-parallel file reading comment out section 1, and uncomment section 2
+# the paths are also changed to use os, so it should be cross platform
+# -------------------------------------------------------------------------------------
+# 1
+
+# function to read file and send to pipe
+def fn(pipe, path):
+    pipe.send(read_json(path))
+    pipe.close()
+
+p_c, c_c = Pipe()
+p_l, c_l = Pipe()
+p_n, c_n = Pipe()
+p_r, c_r = Pipe()
+
+c_proc = Process(target=fn, args=(c_c, os.path.join(path, r'calendar.json'),))
+l_proc = Process(target=fn, args=(c_l, os.path.join(path, r'listings.json'),))
+n_proc = Process(target=fn, args=(c_n, os.path.join(path, r'neighbourhoods.json'),))
+r_proc = Process(target=fn, args=(c_r, os.path.join(path, r'reviews.json'),))
+
+c_proc.start()
+l_proc.start()
+n_proc.start()
+r_proc.start()
+
+cal = p_c.recv()
+lst = p_l.recv()
+nhd = p_n.recv()
+rev = p_r.recv()
+
+c_proc.join()
+l_proc.join()
+n_proc.join()
+r_proc.join()
+
+# -------------------------------------------------------------------------------------
+#2
+
+#cal = read_json(os.path.join(path, r'calendar.json'))
+#lst = read_json(os.path.join(path, r'listings.json'))
+#nhd = read_json(os.path.join(path, r'neighbourhoods.json'))
+#rev = read_json(os.path.join(path, r'reviews.json'))
+
+# -------------------------------------------------------------------------------------
+
+files = {'calendar' : cal,\
+    'listings' : lst,\
+    'neighbourhoods' : nhd,\
+    'reviews' : rev}
+
+
+#file_name = []
+#files = {}
+#file_list = glob.glob('data\*.json')
+#for f in file_list:
+#    print(f)
+#json_path = []
+#for i in file_list:
+#    json_path.append(i)
+#for i in file_list:
+#    file_name.append(re.findall('(?<=\\\\).*?(?=\.)',i))
+#for x,i in enumerate(file_name):
+#    files[i[0]] = read_json(json_path[x])
 
 #listings_detailed = read_json('data/listings_detailed.json')
 #reviews_detailed = read_json('data/reviews_detailed.json')
