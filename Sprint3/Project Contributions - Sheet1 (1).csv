@@ -1,0 +1,33 @@
+Sprint 1 Old Film Stats Group,,,,,,,
+Feature,Feature Points,Task Reference,Contributor 1,Contributor 2,Contributor 3,Contributor 4,Comments/special notes
+Server - Hello World,?,"1,4,5",Isacc,,,,Is there really any way that more than one person can do the initial setup?
+Client - Hello World,?,"2,3",Isacc,,,,Is there really any way that more than one person can do the initial setup?
+,,,,,,,
+"Sprint 1 (Tsz Hin Lo(Chris), Kyle Bowen)",,,,,,,
+Feature,Feature Points,Task Reference,Contributor 1,Contributor 2,Contributor 3,Contributor 4,Comments/special notes
+Server Connectivity,5,,Chris,Kyle Bowen,,,
+POST request (Popup Message),6,,Chris,,,,
+Server Response (Print Message to console),2,,Chris,,,,
+,,,,,,,
+"Sprint 2 (Kyle Garcia, Andrew, Tristan)",,,,,,,
+Feature,Feature Points,Task Reference,Contributor 1,Contributor 2,Contributor 3,Contributor 4,Comments/special notes
+CSV Parsing,7,"1,5",Andrew,Kyle,,,"Managed to parse successfully, but couldn't implement into server due to group mates dropping"
+Convert Server to C++ from Django,7,"6,8",Tristan,,,,"We couldn't figure out the django implementation, so converted to C/C++ server implementation."
+,,,,,,,
+"Sprint 2 (Tsz Hin Lo(Chris), Kyle Bowen)",,,,,,,
+Feature,Feature Points,Task Reference,Contributor 1,Contributor 2,Contributor 3,Contributor 4,Comments/special notes
+Parsing CSV into html table,9,,Chris,,,,
+Searching Keyword ,7,,Chris,,,,
+,,,,,,,
+Sprint 3,,,,,,,
+Feature,Feature Points,Task Reference,Contributor 1,Contributor 2,Contributor 3,Contributor 4,Comments/special notes
+Insert/Pop-Up Window,9,,Andrew,Chris,Kyle Garcia,,
+Update/Pop-Up Window,8,,Chris,Kyle Garcia,Andrew,,
+Edit Current Data to assign ,10,,Chris,Andrew,,,
+Delete,7,,Andrew,Kyle Bowen,,,
+Back Up,7,,Chris,,,,
+Import,7,,Chris,,,,
+Convert CSV to JSON,6,,Tristan Naess,Kyle Bowen,,,"Converted programmatically and manually, not in-project code"
+"read JSON into dicts, save dicts to JSON",5,,Tristan Naess,,,,"Code is relatively easy, how to implement decisions were the hard part"
+Styling Webpage,5,,Chris,Kyle Garcia,,,
+Drop Down Menu ,7,,Chris,Kyle Bowen,,,"Automatic read all files from local, and read all the titles in each csv file for searching"
