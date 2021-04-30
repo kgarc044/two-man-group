@@ -4,9 +4,13 @@ from flask import Flask, render_template, request, session
 from time import time
 import re
 import glob
-
+import matplotlib.pyplot as plt
+import numpy as np
+from io import BytesIO
+import base64
 from parse_json import read_json # Tristan's parse_json functions
 from parse_json import dict_to_json
+from analyzer import a1
 
 app = Flask(__name__)
 app.secret_key = 'super secret key'
@@ -34,6 +38,7 @@ for x,i in enumerate(file_name):
 
 #listings_detailed = read_json('data/listings_detailed.json')
 #reviews_detailed = read_json('data/reviews_detailed.json')
+
 
 @app.route('/')
 def index():
@@ -208,6 +213,11 @@ def insert():
 
     return render_template('searching.html', f_name_list = f_name_list, file=file, arr=arr,
         title=title, num_title=num_title, num_list=num_list, num_total=num_total, enumerate=enumerate)
+
+@app.route('/analyzer')
+def analyzer():
+    data = a1()
+    return render_template('analyzer.html',data=data)
 
 if __name__ == "__main__":
     app.run(debug=True)

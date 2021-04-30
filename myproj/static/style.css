@@ -259,6 +259,26 @@ h1.bkup-msg{
   left: 900;
   top: 30;
 }
+
+.container .analyzer_window{
+  width: 100%;
+  height: auto;
+  flex-direction: column;
+}
+
+.container .analyzer_window .ana1{
+  width: 100%;
+  height: 500px;
+}
+
+.container .analyzer_window .ana1 .ana-wrapper{
+  width: auto;
+  height: auto;
+  align-items: center;
+  position: absolute;
+  left: 200px;
+  
+}
 /*----------CVS Table--------*/
 
 table.blueTable {
