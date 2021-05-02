@@ -11,11 +11,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 from io import BytesIO
 import base64
-<<<<<<< HEAD
-=======
-import os
-from multiprocessing import Process, Pipe
->>>>>>> 608a4ed (Added code for parallel file parsing, but is slower. Changed path to use os module)
 
 from parse_json import read_json # Tristan's parse_json functions
 from parse_json import dict_to_json
