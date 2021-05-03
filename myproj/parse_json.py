@@ -1,6 +1,7 @@
 import re # regexs
 import json
 import tarfile
+from multiprocessing import Pool
 
 #pattern = r",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)" # listings.csv
 pattern = r",|,\$" # calendar.csv
@@ -48,6 +49,16 @@ def read_json(file):
     entries = []
     for line in f:
         entries.append(json.loads(line))
+    
+    return entries
+
+
+# multiprocessing version, not working
+def read_json_p(file, i):
+    f = open(file, r'r')
+
+    with Pool(i) as p:
+        entries = p.map(json.loads, f, 10)
     
     return entries
 

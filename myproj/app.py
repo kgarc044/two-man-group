@@ -5,7 +5,6 @@ from time import time
 import re
 import glob
 import os
-from multiprocessing import Process, Pipe
 
 import matplotlib.pyplot as plt
 import numpy as np
