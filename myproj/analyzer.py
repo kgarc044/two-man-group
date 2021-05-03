@@ -63,14 +63,14 @@ def average_availability(data):
     # setup
     plt.bar(labels, vals, color='maroon', width = 0.6)
     plt.title('Average Availability of each Neighbourhood Group')
-    plt.xlabel('Group')
+    plt.xlabel('Neighbourhood Group')
     plt.ylabel('Days in the Year')
     plt.setp(ax.get_xticklabels(), rotation = 20, horizontalalignment='right')
-    fig.subplots_adjust(bottom=0.2)
+    fig.subplots_adjust(bottom=0.25)
     
     # save
     buf = BytesIO()
-    #fig.savefig('graph.png', format='png') # currently saves to file for testing
+    fig.savefig('graph.png', format='png') # currently saves to file for testing
     fig.savefig(buf, format="PNG")
     data = base64.b64encode(buf.getbuffer()).decode("ascii")
     return data
@@ -142,7 +142,7 @@ def average_dow_p(data, i):
     plt.bar(labels, vals, color='maroon', width = 0.6)
     plt.title('Average Price by Day of the Week')
     plt.xlabel('Day')
-    plt.ylabel('Price')
+    plt.ylabel('Daily Price')
     
     # save
     buf = BytesIO()
@@ -181,7 +181,7 @@ def average_dow(data):
     plt.bar(labels, vals, color='maroon', width = 0.6)
     plt.title('Average Price by Day of the Week')
     plt.xlabel('Day')
-    plt.ylabel('Price')
+    plt.ylabel('Daily Price')
     
     # save
     buf = BytesIO()
@@ -190,3 +190,104 @@ def average_dow(data):
     data = base64.b64encode(buf.getbuffer()).decode("ascii")
     return data
 
+
+# takes listings
+# returns plot of average price per neighbourhood group
+def average_price_ng(data):
+    
+    groups = {}
+    # for each entry
+    for entry in data:
+        # get neighbourhood group and avaiablility
+        group = entry[r'neighbourhood_group']
+        price = int(entry[r'price'])
+
+        # if group not counted yet, add group, else add price
+        if group not in groups:
+            groups[group] = [price, 1]
+            continue
+        groups[group][0] = groups[group][0] + price
+        groups[group][1] = groups[group][1] + 1
+
+    # average availability per group
+    labels = []
+    vals = []
+    for k, v in groups.items():
+        avg = v[0] / v[1]
+        labels.append(k)
+        vals.append(avg)
+
+    # make plot
+    fig, ax = plt.subplots(figsize=(10,4))
+
+    # setup
+    plt.bar(labels, vals, color='maroon', width = 0.6)
+    plt.title('Average Price of each Neighbourhood Group')
+    plt.xlabel('Neighbourhood Group')
+    plt.ylabel('Daily Price')
+    plt.setp(ax.get_xticklabels(), rotation = 20, horizontalalignment='right')
+    fig.subplots_adjust(bottom=0.25)
+    
+    # save
+    buf = BytesIO()
+    fig.savefig('graph.png', format='png') # currently saves to file for testing
+    fig.savefig(buf, format="PNG")
+    data = base64.b64encode(buf.getbuffer()).decode("ascii")
+    return data
+
+# *** BROKEN ***
+# takes listings
+# returns plot of average price per neighbourhood group
+def price_range_ng(data):
+    
+    groups = {}
+    # for each entry
+    for entry in data:
+        # get neighbourhood group and avaiablility
+        group = entry[r'neighbourhood_group']
+        price = float(entry[r'price'])
+
+        # if group not counted yet, add group, else add price
+        if group not in groups:
+            groups[group] = [price, 1, price, price]
+            continue
+        groups[group][0] = groups[group][0] + price
+        groups[group][1] = groups[group][1] + 1
+        if price < groups[group][2]: # new min
+            groups[group][2] = price
+        if price > groups[group][3]: # new max
+            groups[group][3] = price
+
+    # average availability per group
+    labels = []
+    fil = []
+    upp = []
+    low = []
+    for k, v in groups.items():
+        print(v)
+        avg = (v[0] / v[1]) - v[2]
+        labels.append(k)
+        low.append(avg)
+        fil.append(v[2])
+        top = v[3] - avg
+        upp.append(top)
+
+    # make plot
+    fig, ax = plt.subplots(figsize=(10,4))
+
+    # setup
+    plt.bar(labels, fil, color='white', width = 0.6) # fill up to bottom
+    plt.bar(labels, low, color='maroon', width = 0.6, bottom = fil)
+    plt.bar(labels, upp, color='forestgreen', width = 0.6, bottom = low+fil)
+    plt.title('Price Range of each Neighbourhood Group')
+    plt.xlabel('Neighbourhood Group')
+    plt.ylabel('Daily Price')
+    plt.setp(ax.get_xticklabels(), rotation = 20, horizontalalignment='right')
+    fig.subplots_adjust(bottom=0.25)
+    
+    # save
+    buf = BytesIO()
+    fig.savefig('graph.png', format='png') # currently saves to file for testing
+    fig.savefig(buf, format="PNG")
+    data = base64.b64encode(buf.getbuffer()).decode("ascii")
+    return data
