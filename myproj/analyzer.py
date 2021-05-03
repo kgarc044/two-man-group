@@ -30,47 +30,12 @@ def a1():
     data = base64.b64encode(buf.getbuffer()).decode("ascii")
     return data
 
-# draw graph
-def bar_graph(data_in, title, y_label, x_label):
-    # extract data and labels
-    labels = []
-    data = []
-    for d in data_in:
-        labels.append(d[0])
-        data.append(d[1])
-    
-    # create plot
-    fig, ax = plt.subplots()
-    # position bars
-    x = np.arange(len(labels))
-    
-    # add bars
-    width = .5
-    bars = ax.bar(x, data, width)
 
-    # label axes
-    ax.set_title(title)
-    ax.set_ylabel(y_label)
-    ax.set_xlabel(x_label)
-    ax.set_xticks(x)
-    ax.set_xticklabels(labels)
-    plt.setp(ax.get_xticklabels(), rotation=30, horizontalalignment='right')
-    # save
-    buf = BytesIO()
-    fig.savefig('graph.png', format='png') # currently saves to file for testing
-    fig.savefig(buf, format="PNG")
-    data = base64.b64encode(buf.getbuffer()).decode("ascii")
-    return data
-
-
-
-# takes correct file array
-# returns list of pairs; neighbourhood group and availability, could generalize to average x per y by replacing availability_365 and neighbourhood group with arguments
-
+# takes listings
+# returns plot of neighbourhood group average availability
 def average_availability(data):
     
     groups = {}
-    result = []
     # for each entry
     for entry in data:
         # get neighbourhood group and avaiablility
@@ -85,14 +50,34 @@ def average_availability(data):
         groups[group][1] = groups[group][1] + 1
 
     # average availability per group
+    labels = []
+    vals = []
     for k, v in groups.items():
         avg = v[0] / v[1]
-        result.append((k, avg))
+        labels.append(k)
+        vals.append(avg)
 
-    return result
+    # make plot
+    fig, ax = plt.subplots(figsize=(10,4))
+
+    # setup
+    plt.bar(labels, vals, color='maroon', width = 0.6)
+    plt.title('Average Availability of each Neighbourhood Group')
+    plt.xlabel('Group')
+    plt.ylabel('Days in the Year')
+    plt.setp(ax.get_xticklabels(), rotation = 20, horizontalalignment='right')
+    fig.subplots_adjust(bottom=0.2)
+    
+    # save
+    buf = BytesIO()
+    #fig.savefig('graph.png', format='png') # currently saves to file for testing
+    fig.savefig(buf, format="PNG")
+    data = base64.b64encode(buf.getbuffer()).decode("ascii")
+    return data
 
 
 
+# helper for average_dow_p
 def avg_helper(entries, pipe):
     days =  [0,0,0,0,0,0,0] # Mon - Sun
     count = [0,0,0,0,0,0,0]
@@ -108,10 +93,9 @@ def avg_helper(entries, pipe):
     pipe.close()
 
 
-# takes correct file array
-# returns list of pairs, (day, average price)
-# parallel version
-
+# takes calendar
+# returns plot of average price by day of week
+# parallelized
 def average_dow_p(data, i):
 
     days =  [0,0,0,0,0,0,0] # Mon - Sun
@@ -145,18 +129,33 @@ def average_dow_p(data, i):
             days[i] += result[0][i]
             count[i] += result[1][i]
     
-    names = [r'Monday', r'Tuesday', r'Wednesday', r'Thursday', r'Friday', r'Saturday', r'Sunday']
-    result = []
-    for i in [6,1,2,3,4,5]:
-        result.append((names[i], days[i] / count[i])) # store as ('-day', average) Mon-Fri
+    labels = [r'Sunday', r'Monday', r'Tuesday', r'Wednesday', r'Thursday', r'Friday', r'Saturday']
+    vals = [0, 0, 0, 0, 0, 0, 0]
+    for i in [6,0,1,2,3,4,5]:
+        avg = days[i] / count[i]
+        vals[i] = avg
 
-    return result
+    # make plot
+    fig, ax = plt.subplots(figsize=(10,4))
+
+    # setup
+    plt.bar(labels, vals, color='maroon', width = 0.6)
+    plt.title('Average Price by Day of the Week')
+    plt.xlabel('Day')
+    plt.ylabel('Price')
+    
+    # save
+    buf = BytesIO()
+    #fig.savefig('graph.png', format='png') # currently saves to file for testing
+    fig.savefig(buf, format="PNG")
+    data = base64.b64encode(buf.getbuffer()).decode("ascii")
+    return data
 
 
-# takes correct file array
-# returns list of pairs (day, average price)
-# simple version
 
+# takes calendar
+# returns plot of price per day of week
+# serial
 def average_dow(data):
     days =  [0,0,0,0,0,0,0] # Mon - Sun
     count = [0,0,0,0,0,0,0]
@@ -168,9 +167,26 @@ def average_dow(data):
         days[day_index] += float(entry[r'price'])
         count[day_index] += 1
     
-    names = [r'Monday', r'Tuesday', r'Wednesday', r'Thursday', r'Friday', r'Saturday', r'Sunday']
-    result = []
-    for i in range(7):
-        result[(i + 6) % 7] = (names[i], days[i] / count[i]) # store as ('-day', average) Mon-Fri
 
-    return result
+    labels = [r'Sunday', r'Monday', r'Tuesday', r'Wednesday', r'Thursday', r'Friday', r'Saturday']
+    vals = [0, 0, 0, 0, 0, 0, 0]
+    for i in [6,0,1,2,3,4,5]:
+        avg = days[i] / count[i]
+        vals[i] = avg
+
+    # make plot
+    fig, ax = plt.subplots(figsize=(10,4))
+
+    # setup
+    plt.bar(labels, vals, color='maroon', width = 0.6)
+    plt.title('Average Price by Day of the Week')
+    plt.xlabel('Day')
+    plt.ylabel('Price')
+    
+    # save
+    buf = BytesIO()
+    #fig.savefig('graph.png', format='png') # currently saves to file for testing
+    fig.savefig(buf, format="PNG")
+    data = base64.b64encode(buf.getbuffer()).decode("ascii")
+    return data
+
