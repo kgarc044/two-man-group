@@ -16,21 +16,56 @@
                         <li><a href='/analyzer' class="btn">Madrid Airbnb Data Analyzer</a></li>
                     </ul>
                 </nav>
+                <div class = "dropdown" style="position: relative;left: 50%;">
+                    <button class="dropbtn" style="color:white; align-items: center;">Analyzer</button>
+                    <div class = "dropdown-content">
+                        <button onclick="popup(this.id)" id=1> Price Range By Neighbourhood Group </button>
+                        <button onclick="popup(this.id)" id=2> Average Availability By Neighbourhood Group </button>
+                        <button onclick="popup(this.id)" id=3> Average Price By Day of The Week </button>
+                        <script>
+                            function popup(ids) {
+                                if(ids ==1){
+                                  document.getElementById("analyzer1-box").classList.toggle("active");}
+                                else if(ids ==2){
+                                  document.getElementById("analyzer2-box").classList.toggle("active");}
+                                else{
+                                  document.getElementById("analyzer3-box").classList.toggle("active");}
+                            }
+                           </script>
+                    </div>
+                </div>
             </div>
-            <div class="csvUpdate">
-                <form class="Update_key" method="POST" action="/update">
-                    <!-- Dropdown menu -->
-                    <select name = "fname" >
-                        {% for f_name_list in f_name_list%}
-                        <option value = "{{f_name_list}}" selected >{{f_name_list}}</option>"
-                        {% endfor %}
-                    </select>
-                    <button type="submit" id="update_bnt" > UPDATE CSV </button>
-                </form>
+            <div class = "analyzer1" id="analyzer1-box">
+                <div class = "ana_window1">
+                    <div class="close-btn1" onclick="popup(this.id)" id=1>×</div>
+                    <img src='{{data1}}'>
+                </div>
             </div>
-            
+            <div class = "analyzer2" id="analyzer2-box">
+                <div class = "ana_window2">
+                    <div class="close-btn2" onclick="popup(this.id)" id=2>×</div>
+                    <img src='{{data2}}'>
+                </div>
+            </div>
+            <div class = "analyzer3" id="analyzer3-box">
+                <div class = "ana_window3">
+                    <div class="close-btn3" onclick="popup(this.id)" id=3>×</div>
+                    <img src='{{data3}}'>
+                </div>
+            </div>
             <div class="content">
                 <div class="wrapper">
+                    <div class="csvUpdate">
+                        <form class="Update_key" method="POST" action="/update">
+                            <!-- Dropdown menu -->
+                            <select name = "fname" >
+                                {% for f_name_list in f_name_list%}
+                                <option value = "{{f_name_list}}" selected >{{f_name_list}}</option>"
+                                {% endfor %}
+                            </select>
+                            <button type="submit" id="update_bnt" > UPDATE CSV </button>
+                        </form>
+                    </div>
                     <form class="search_key" method="POST" action="/search">
                         <select name = "sel">
                         {% for title in title%}

@@ -10,7 +10,7 @@ from io import BytesIO
 import base64
 from parse_json import read_json # Tristan's parse_json functions
 from parse_json import dict_to_json
-from analyzer import a1
+from analyzer import average_availability,price_range_ng,average_dow_p
 
 app = Flask(__name__)
 app.secret_key = 'super secret key'
@@ -25,9 +25,13 @@ pattern = r",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"
 #     'neighbourhoods' : read_json(r'E:\CS180\Web\myproj\data\neighbourhoods.json'),\
 #     'reviews' : read_json(r'E:\CS180\Web\myproj\data\reviews.json')}
 
+data1 = "static\images\price_range_ng.png"
+data2 = "static\images/average_availability.png"
+data3 = "static\images/average_dow_p.png"
+
 file_name = []
 files = {}
-file_list = glob.glob('data\*.json')
+file_list = glob.glob('data\*.json') 
 json_path = []
 for i in file_list:
     json_path.append(i)
@@ -43,8 +47,11 @@ for x,i in enumerate(file_name):
 @app.route('/')
 def index():
     f_name_list = files.keys()
-    session.clear()
-    return render_template('index.html',f_name_list=f_name_list, enumerate=enumerate)#, menu=menu)
+    #session.clear()
+    price_range_ng(files['listings'])
+    average_availability(files['listings'])
+    average_dow_p(files['calendar'])
+    return render_template('index.html',f_name_list=f_name_list, data1=data1, data2=data2, data3=data3, enumerate=enumerate)#, menu=menu)
 
 @app.route('/update', methods =['POST'])
 def update():
@@ -73,9 +80,9 @@ def update():
         session['num_list'] = len(arr[0][0])
     session['num_total'] = min(len(arr), 40)
     # session.clear()
-
     return render_template('searching.html',f_name_list=f_name_list, file=file,
-        title=title, num_title=num_title, arr=arr, num_list=num_list, num_total=num_total, enumerate=enumerate) 
+        title=title, num_title=num_title, arr=arr, num_list=num_list, num_total=num_total,
+        data1=data1, data2=data2, data3=data3, enumerate=enumerate) 
 
 @app.route('/search', methods = ['POST'])
 def key_Search():
@@ -105,8 +112,10 @@ def key_Search():
     else:
         session['num_list'] = len(arr[0][0])
     session['num_total'] = min(len(arr), 40)
+
     return render_template('searching.html',f_name_list=f_name_list, file=file, select= select,
-         word=word, title=title, num_title=num_title, arr=arr, num_list=num_list, num_total=num_total, enumerate=enumerate)   
+         word=word, title=title, num_title=num_title, arr=arr, num_list=num_list, num_total=num_total,
+         data1=data1, data2=data2, data3=data3, enumerate=enumerate)   
 
 @app.route('/del', methods = ['POST'])
 def delfunc():
@@ -134,9 +143,10 @@ def delfunc():
     del arr[int(test[1])]
 
     session['num_total'] = session.get('num_total', None) -1
-    
+
     return render_template('searching.html', f_name_list = f_name_list, file=file, arr=arr,
-        title=title, num_title=num_title, num_list=num_list, num_total=num_total, index=index, enumerate=enumerate)
+        title=title, num_title=num_title, num_list=num_list, num_total=num_total, index=index,
+        data1=data1, data2=data2, data3=data3,  enumerate=enumerate)
 
 @app.route('/edit', methods = ['POST'])
 def edit():
@@ -169,9 +179,13 @@ def edit():
     # print(files[file].index(temp))
     
     session['arr'] = arr
+    price_range_ng(files['listings'])
+    average_availability(files['listings'])
+    average_dow_p(files['calendar'])
 
     return render_template('searching.html', f_name_list = f_name_list, file=file, arr=arr, index1=index,
-        title=title, num_title=num_title, num_list=num_list, num_total=num_total, enumerate=enumerate)
+        title=title, num_title=num_title, num_list=num_list, num_total=num_total, 
+        data1=data1, data2=data2, data3=data3, enumerate=enumerate)
     # return render_template('searching.html', f_name_list=f_name_list, enumerate=enumerate)
 
 @app.route('/export', methods = ['POST'])
@@ -190,7 +204,11 @@ def backupFunction():
     dict_to_json(files[file],"data/"+file+"-backup.json")
     BackUpMsg = "New "+file+" has been backed up!!!"
     files[file+"-backup"]=read_json("data/"+file+"-backup.json")
-    return render_template('index.html',BackUpMsg=BackUpMsg, f_name_list=f_name_list,title=title, enumerate=enumerate)
+    price_range_ng(files['listings'])
+    average_availability(files['listings'])
+    average_dow_p(files['calendar'])
+    return render_template('index.html',BackUpMsg=BackUpMsg, f_name_list=f_name_list,title=title,
+    data1=data1, data2=data2, data3=data3, enumerate=enumerate)
 
 @app.route('/insert', methods = ['POST'])
 def insert():
@@ -210,14 +228,14 @@ def insert():
     temp = dict(zip(title, fields))
 
     files[file].append(temp)
+    price_range_ng(files['listings'])
+    average_availability(files['listings'])
+    average_dow_p(files['calendar'])
 
     return render_template('searching.html', f_name_list = f_name_list, file=file, arr=arr,
-        title=title, num_title=num_title, num_list=num_list, num_total=num_total, enumerate=enumerate)
+        title=title, num_title=num_title, num_list=num_list, num_total=num_total,
+        data1=data1, data2=data2, data3=data3, enumerate=enumerate)
 
-@app.route('/analyzer')
-def analyzer():
-    data = a1()
-    return render_template('analyzer.html',data=data)
 
 if __name__ == "__main__":
     app.run(debug=True)
