@@ -211,7 +211,7 @@ h1.bkup-msg{
   width: 1000px;
   height: auto;
   position: absolute;
-  top: 50%;
+  top: 1000;
   left: 50%;
   flex-direction: column;
   transform: translate(-50%,-150%) scale(0);
