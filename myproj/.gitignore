@@ -5,3 +5,4 @@ Lib/
 Scripts/
 *.cfg
 static/images/*.png
+test.py

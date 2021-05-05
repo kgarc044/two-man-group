@@ -1,5 +1,6 @@
 import re # regexs
 import json
+import ujson
 import tarfile
 
 #pattern = r",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)" # listings.csv
@@ -47,7 +48,7 @@ def read_json(file):
     
     entries = []
     for line in f:
-        entries.append(json.loads(line))
+        entries.append(ujson.loads(line))
     
     return entries
 

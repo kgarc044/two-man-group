@@ -37,7 +37,7 @@
                      <script>
                       function togglePopup(clicked_id) {
                             document.getElementById("input-field2").innerHTML = '{% for idx,title in enumerate(title) %}<p>{{title}}</p>\
-                            row: '+clicked_id+' col: {{idx}} <input id="input-something" name = "h{{idx}}" value="" ="text" class="validate">{% endfor %}\
+                            row: '+clicked_id+' col: {{idx}} <input id="input-something" name = "h{{idx}}" value="{{arr[i][0][idx]}}" ="text" class="validate">{% endfor %}\
                             <button id="second-button" value="'+clicked_id+'" name="row">Confirm</button></div>';
                             document.getElementById("popup-2").classList.toggle("active");
                       }

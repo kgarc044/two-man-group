@@ -266,12 +266,14 @@ def price_range_ng(data):
     # make plot
     fig, ax = plt.subplots(figsize=(10,4))
     # setup
-    plt.bar(labels, fil, color='black', width = 0.6) # fill up to bottom 
-    plt.bar(labels, upp, color='forestgreen', width = 0.6, bottom = low+fil , label = "Above Average Price")
-    plt.bar(labels, low, color='maroon', width = 0.6, bottom = fil, label = 'Below Average Price')
-    lg = ax.legend(fontsize='small', bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0., ncol=2)
+    plt.barh(labels, fil, color='black', height= 0.6) # fill up to bottom 
+    plt.barh(labels, upp, color='forestgreen', height= 0.6, left = low+fil , label = "Above Average Price")
+    plt.barh(labels, low, color='maroon', height= 0.6, left= fil, label = 'Below Average Price')
+    lg = ax.legend(fontsize='small', bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)
     text = ax.text(-0.2,1.05," ", transform=ax.transAxes)
-    ax.axes.xaxis.set_visible(False)
+    #plt.setp(ax.get_xticklabels(), rotation = 90, horizontalalignment='right')
+    #fig.subplots_adjust(bottom=0.25)
+    #ax.axes.xaxis.set_visible(False)
     plt.tight_layout()
     plt.title('Price Range of each Neighbourhood Group')
     plt.xlabel('Neighbourhood Group')
