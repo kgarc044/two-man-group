@@ -29,7 +29,7 @@ files = {}
 entries = os.path.abspath(os.path.dirname(__file__))
 json_path = os.listdir(os.path.join(entries, 'data'))
 listing = []
-for idx,i in enumerate(json_path):
+for i in json_path:
     if i.endswith(".json"):
         listing.append(i.replace(".json",""))
 for i in listing:
