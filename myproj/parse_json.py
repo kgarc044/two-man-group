@@ -39,7 +39,6 @@ def dict_to_json(data, out_file):
         json.dump(entry, f)
         f.write('\n')
     
-    
     f.close()
 
 # reads given JSON file to list of dict

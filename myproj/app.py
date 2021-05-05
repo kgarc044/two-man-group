@@ -19,30 +19,27 @@ rMsg = "Hello from Server!"
 arr = ['']
 pattern = r",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"
 
+# read cached analytics images
+data1 = os.path.join("static","images","price_range_ng.png")
+data2 = os.path.join("static","images","average_availability.png")
+data3 = os.path.join("static","images","average_dow_p.png")
+
 # load JSON files to dict of lists of dict; need to check if JSON or CSV is faster. CSV is smaller
-# files = {'calendar' : read_json(r'data\\calendar.json'),\
-#          'listings' : read_json(r'data\listings.json'),\
-#          'neighbourhoods' : read_json(r'data\neighbourhoods.json'),\
-#          'reviews' : read_json(r'data\reviews.json')}
-
-data1 = r"static\images\price_range_ng.png"
-data2 = r"static\images\average_availability.png"
-data3 = r"static\images\average_dow_p.png"
-
 files = {}
 entries = os.path.abspath(os.path.dirname(__file__))
-json_path = os.listdir(entries+'/data')
+json_path = os.listdir(os.path.join(entries, 'data'))
 listing = []
 for idx,i in enumerate(json_path):
-    listing.append(json_path[idx].replace(".json",""))
-for x,i in enumerate(listing):
-    tic = time.perf_counter()
-    files[i] = read_json(entries+'\data\\'+json_path[x])
-    toc = time.perf_counter()
-    print("Reading json "+i+f" in {toc - tic:0.4f} seconds")
+    if i.endswith(".json"):
+        listing.append(i.replace(".json",""))
+for i in listing:
+    #tic = time.perf_counter()
+    files[i] = read_json(os.path.join(entries,'data',i + '.json'))
+    #toc = time.perf_counter()
+    #print("Reading json "+i+f" in {toc - tic:0.4f} seconds")
+
 #listings_detailed = read_json('data/listings_detailed.json')
 #reviews_detailed = read_json('data/reviews_detailed.json')
-
 
 @app.route('/')
 def index():
