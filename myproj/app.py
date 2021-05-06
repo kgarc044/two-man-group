@@ -23,6 +23,10 @@ pattern = r",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"
 data1 = os.path.join("static","images","price_range_ng.png")
 data2 = os.path.join("static","images","average_availability.png")
 data3 = os.path.join("static","images","average_dow_p.png")
+data4 = os.path.join("static","images","average_dow_p.png")
+data5 = os.path.join("static","images","average_dow_p.png")
+data6 = os.path.join("static","images","average_dow_p.png")
+data7 = os.path.join("static","images","average_dow_p.png")
 
 # load JSON files to dict of lists of dict; need to check if JSON or CSV is faster. CSV is smaller
 files = {}
@@ -54,7 +58,8 @@ def index():
     average_dow_p(files['calendar'])
     toc = time.perf_counter()
     print(f"Downloaded the calendar in {toc - tic:0.4f} seconds")
-    return render_template('index.html',f_name_list=f_name_list, data1=data1, data2=data2, data3=data3, enumerate=enumerate)#, menu=menu)
+    return render_template('index.html',f_name_list=f_name_list, data1=data1, data2=data2, data3=data3, 
+    data4=data4, data5=data5, data6=data6, data7=data7, enumerate=enumerate)#, menu=menu)
 
 @app.route('/update', methods =['POST'])
 def update():
@@ -85,7 +90,7 @@ def update():
     # session.clear()
     return render_template('searching.html',f_name_list=f_name_list, file=file,
         title=title, num_title=num_title, arr=arr, num_list=num_list, num_total=num_total,
-        data1=data1, data2=data2, data3=data3, enumerate=enumerate) 
+        data1=data1, data2=data2, data3=data3, data4=data4, data5=data5, data6=data6, data7=data7, enumerate=enumerate) 
 
 @app.route('/search', methods = ['POST'])
 def key_Search():
@@ -118,7 +123,7 @@ def key_Search():
 
     return render_template('searching.html',f_name_list=f_name_list, file=file, select= select,
          word=word, title=title, num_title=num_title, arr=arr, num_list=num_list, num_total=num_total,
-         data1=data1, data2=data2, data3=data3, enumerate=enumerate)   
+         data1=data1, data2=data2, data3=data3, data4=data4, data5=data5, data6=data6, data7=data7, enumerate=enumerate)   
 
 @app.route('/del', methods = ['POST'])
 def delfunc():
@@ -146,10 +151,13 @@ def delfunc():
     del arr[int(test[1])]
 
     session['num_total'] = session.get('num_total', None) -1
+    price_range_ng(files['listings'])
+    average_availability(files['listings'])
+    average_dow_p(files['calendar'])
 
     return render_template('searching.html', f_name_list = f_name_list, file=file, arr=arr,
         title=title, num_title=num_title, num_list=num_list, num_total=num_total, index=index,
-        data1=data1, data2=data2, data3=data3,  enumerate=enumerate)
+        data1=data1, data2=data2, data3=data3, data4=data4, data5=data5, data6=data6, data7=data7, enumerate=enumerate)
 
 @app.route('/edit', methods = ['POST'])
 def edit():
@@ -188,7 +196,7 @@ def edit():
 
     return render_template('searching.html', f_name_list = f_name_list, file=file, arr=arr, index1=index,
         title=title, num_title=num_title, num_list=num_list, num_total=num_total, 
-        data1=data1, data2=data2, data3=data3, enumerate=enumerate)
+        data1=data1, data2=data2, data3=data3, data4=data4, data5=data5, data6=data6, data7=data7, enumerate=enumerate)
     # return render_template('searching.html', f_name_list=f_name_list, enumerate=enumerate)
 
 @app.route('/export', methods = ['POST'])
@@ -211,7 +219,7 @@ def backupFunction():
     average_availability(files['listings'])
     average_dow_p(files['calendar'])
     return render_template('index.html',BackUpMsg=BackUpMsg, f_name_list=f_name_list,title=title,
-    data1=data1, data2=data2, data3=data3, enumerate=enumerate)
+    data1=data1, data2=data2, data3=data3, data4=data4, data5=data5, data6=data6, data7=data7, enumerate=enumerate)
 
 @app.route('/insert', methods = ['POST'])
 def insert():
@@ -237,7 +245,7 @@ def insert():
 
     return render_template('searching.html', f_name_list = f_name_list, file=file, arr=arr,
         title=title, num_title=num_title, num_list=num_list, num_total=num_total,
-        data1=data1, data2=data2, data3=data3, enumerate=enumerate)
+        data1=data1, data2=data2, data3=data3, data4=data4, data5=data5, data6=data6, data7=data7, enumerate=enumerate)
 
 
 if __name__ == "__main__":
