@@ -10,7 +10,7 @@ from io import BytesIO
 import base64
 from parse_json import read_json # Tristan's parse_json functions
 from parse_json import dict_to_json
-from analyzer import average_availability,price_range_ng,average_dow_p
+from analyzer import average_availability,price_range_ng,average_dow_p,price_distribution_region
 
 app = Flask(__name__)
 app.secret_key = 'super secret key'
@@ -54,10 +54,11 @@ def index():
     toc = time.perf_counter()
     print(f"Downloaded the listings in {toc - tic:0.4f} seconds")
     average_availability(files['listings'])
-    tic = time.perf_counter()
-    average_dow_p(files['calendar'])
-    toc = time.perf_counter()
-    print(f"Downloaded the calendar in {toc - tic:0.4f} seconds")
+    # tic = time.perf_counter()
+    # average_dow_p(files['calendar'])
+    # toc = time.perf_counter()
+    # print(f"Downloaded the calendar in {toc - tic:0.4f} seconds")
+    price_distribution_region(files['listings'], 'Hispanoam\u00e9rica')
     return render_template('index.html',f_name_list=f_name_list, data1=data1, data2=data2, data3=data3, 
     data4=data4, data5=data5, data6=data6, data7=data7, enumerate=enumerate)#, menu=menu)
 

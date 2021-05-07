@@ -286,3 +286,26 @@ def price_range_ng(data):
     #data = base64.b64encode(buf.getbuffer()).decode("ascii")
     #return data
 
+def price_distribution_region(data, region):
+    
+    group = []
+
+    for entry in data:
+        if entry[r'neighbourhood'] == region:
+            group.append(int(entry[r'price']))
+    
+    group.sort()
+
+    fig, ax = plt.subplots(figsize = (10, 4))
+
+    n, bins, patches = ax.hist(group, bins=[0,10,20,30,40,50,60,70,80,90,100,120,140,160,180,200,250,300,400,500,600,700,800,900,1000])
+
+    plt.tight_layout()
+    plt.title('Price Distribution for ' + region)
+    plt.xlabel('Price')
+    plt.ylabel('Frequency')
+    plt.xlim(0, 1000)
+    buf = BytesIO()
+    fig.savefig('static/images/price_distribution_region.png', format='png', bbox_inches='tight')
+
+    print(group)
