@@ -7,6 +7,7 @@ import datetime
 from multiprocessing import Process, Pipe
 import time
 from color import color_css
+import os
 # takes listings
 # returns plot of neighbourhood group average availability
 def average_availability(data):
@@ -53,7 +54,8 @@ def average_availability(data):
     #fig.subplots_adjust(bottom=0.25)
     # save
     buf = BytesIO()
-    fig.savefig('static/images/average_availability.png', format='png',bbox_extra_artists=(lg,text),bbox_inches='tight') 
+    os_path = os.path.abspath(os.path.dirname(__file__))
+    fig.savefig(os_path+'/static/images/average_availability.png', format='png',bbox_extra_artists=(lg,text),bbox_inches='tight') 
     #fig.savefig(buf, format='png',bbox_extra_artists=(lg,text),bbox_inches='tight') 
     #data = base64.b64encode(buf.getbuffer()).decode("ascii")
     #return data
@@ -136,7 +138,8 @@ def average_dow_p(data):
     
     # save
     buf = BytesIO()
-    fig.savefig('static/images/average_dow_p.png', format='png',bbox_extra_artists=(lg,text),bbox_inches='tight') 
+    os_path = os.path.abspath(os.path.dirname(__file__))
+    fig.savefig(os_path+'/static/images/average_dow_p.png', format='png',bbox_extra_artists=(lg,text),bbox_inches='tight') 
     #fig.savefig(buf, format='png',bbox_extra_artists=(lg,text),bbox_inches='tight') 
     #data = base64.b64encode(buf.getbuffer()).decode("ascii")
     #return data
@@ -281,7 +284,8 @@ def price_range_ng(data):
  
     # save
     buf = BytesIO()
-    fig.savefig('static\images\price_range_ng.png', format='png',bbox_extra_artists=(lg,),bbox_inches='tight') # currently saves to file for testing
+    os_path = os.path.abspath(os.path.dirname(__file__))
+    fig.savefig(os_path + '\static\images\price_range_ng.png', format='png',bbox_extra_artists=(lg,),bbox_inches='tight') # currently saves to file for testing
     #fig.savefig(buf, format='png',bbox_extra_artists=(lg,text),bbox_inches='tight') 
     #data = base64.b64encode(buf.getbuffer()).decode("ascii")
     #return data
@@ -306,7 +310,8 @@ def price_distribution_region(data, region):
     plt.ylabel('Frequency')
     plt.xlim(0, 1000)
     buf = BytesIO()
-    fig.savefig('static/images/price_distribution_region.png', format='png', bbox_inches='tight')
+    os_path = os.path.abspath(os.path.dirname(__file__))
+    fig.savefig(os_path +'/static/images/price_distribution_region.png', format='png', bbox_inches='tight')
 
     print(group)
 
@@ -349,8 +354,8 @@ def average_price_for_min_nights(data):
     plt.title('Average Price Per Minimum Nights')
     plt.xlabel('Minimum Nights')
     plt.ylabel('Average Price')
-
-    plt.savefig('static/images/average_price_for_min_nights.png', format='png', bbox_inches='tight')
+    os_path = os.path.abspath(os.path.dirname(__file__))
+    plt.savefig(os_path+'/static/images/average_price_for_min_nights.png', format='png', bbox_inches='tight')
 
 
 def average_helper_year(entries, pipe):
@@ -437,5 +442,6 @@ def average_price_year(data):
     
     # save
     buf = BytesIO()
-    fig.savefig('static/images/average_price_year.png', format='png',bbox_extra_artists=(lg,text),bbox_inches='tight') 
+    os_path = os.path.abspath(os.path.dirname(__file__))
+    fig.savefig(os_path+'/static/images/average_price_year.png', format='png',bbox_extra_artists=(lg,text),bbox_inches='tight') 
 
