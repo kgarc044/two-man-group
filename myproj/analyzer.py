@@ -313,7 +313,7 @@ def price_distribution_region(data, region):
     os_path = os.path.abspath(os.path.dirname(__file__))
     fig.savefig(os_path +'/static/images/price_distribution_region.png', format='png', bbox_inches='tight')
 
-    print(group)
+    # print(group)
 
 def add_list(l, p, v):
     size = len(l)
@@ -358,28 +358,33 @@ def average_price_for_min_nights(data):
     plt.savefig(os_path+'/static/images/average_price_for_min_nights.png', format='png', bbox_inches='tight')
 
 
-def average_helper_year(entries, pipe):
+def average_helper_season(entries, pipe):
 
-    years = [0, 0, 0, 0, 0, 0, 0]
-    count = [0, 0, 0, 0, 0, 0, 0]
-    # test = [0, 0, 0, 0, 0, 0, 0]
+    seasons = [0, 0, 0, 0]
+    count = [0, 0, 0, 0]
     
     for entry in entries:
         year = entry[r'date'].split(r'-')
-        year_i = int(year[0]) % 2015
-        # print(year[0], int(year[0]) % 2015)
-            
-        years[year_i] += float(entry[r'price'])
-        count[year_i] += 1
-
-    pipe.send((years, count))
+        if int(year[1]) == 12 or int(year[1]) == 1 or int(year[1]) == 2:
+            seasons[0] += float(entry[r'price'])
+            count[0] += 1
+        elif int(year[1]) == 3 or int(year[1]) == 4 or int(year[1]) == 5:
+            seasons[1] += float(entry[r'price'])
+            count[1] += 1
+        elif int(year[1]) == 6 or int(year[1]) == 7 or int(year[1]) == 8:
+            seasons[2] += float(entry[r'price'])
+            count[2] += 1
+        elif int(year[1]) == 9 or int(year[1]) == 10 or int(year[1]) == 11:
+            seasons[3] += float(entry[r'price'])
+            count[3] += 1
+    pipe.send((seasons, count))
     pipe.close()
 
 
-def average_price_year(data):
+def average_price_season(data):
 
-    years = [0, 0, 0, 0, 0, 0, 0]
-    count = [0, 0, 0, 0, 0, 0, 0]
+    seasons = [0, 0, 0, 0]
+    count = [0, 0, 0, 0]
 
     processes = []
     pipes = []
@@ -389,7 +394,7 @@ def average_price_year(data):
     e = l
     for _ in range(4-1):
         parent, child = Pipe()
-        p = Process(target=average_helper_year, args=[data[s:e], child])
+        p = Process(target=average_helper_season, args=[data[s:e], child])
         s = e
         e += l
         p.start()
@@ -397,31 +402,29 @@ def average_price_year(data):
         pipes.append(parent)
 
     parent, child = Pipe()
-    p = Process(target=average_helper_year, args=[data[s:], child])
+    p = Process(target=average_helper_season, args=[data[s:], child])
     p.start()
     processes.append(p)
     pipes.append(parent)
 
     for p in range(len(processes)):
-        processes[p].join()
-        result = pipes[p].recv()
-        for i in range(len(years)):
-            years[i] += result[0][i]
-            count[i] += result[1][i]
-    
-    print(years)
-    print(count)
+        if p != 0:
+            processes[p].join()
+            result = pipes[p].recv()
+            for i in range(4):
+                seasons[i] += result[0][i]
+                count[i] += result[1][i]
 
-    labels = [r'2015', r'2016', r'2017', r'2018', r'2019', r'2020', r'2021']
+    labels = [r'Winter', r'Spring', r'Summer', r'Autumn']
     vals = [0, 0, 0, 0, 0, 0, 0]
     for i in range(len(count)):
         if count[i] == 0:
             count[i] = 1
     for i in range(len(labels)):
-        avg = years[i] / count[i]
+        avg = seasons[i] / count[i]
         vals[i] = avg
     
-    print(vals)
+    # print(vals)
 
     # make plot
     fig, ax = plt.subplots(figsize=(10,4))
@@ -436,12 +439,12 @@ def average_price_year(data):
     text = ax.text(-0.2,1.05," ", transform=ax.transAxes)
     ax.axes.xaxis.set_visible(False)
     plt.tight_layout()
-    plt.title('Average Price by Year')
-    plt.xlabel('Year')
-    plt.ylabel('Yearly Price')
+    plt.title('Average Price by Season')
+    plt.xlabel('Season')
+    plt.ylabel('Seasonal Price')
     
     # save
     buf = BytesIO()
     os_path = os.path.abspath(os.path.dirname(__file__))
-    fig.savefig(os_path+'/static/images/average_price_year.png', format='png',bbox_extra_artists=(lg,text),bbox_inches='tight') 
+    fig.savefig(os_path+'/static/images/average_price_season.png', format='png',bbox_extra_artists=(lg,text),bbox_inches='tight') 
 
