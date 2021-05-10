@@ -22,26 +22,23 @@
                         <button onclick="popup(this.id)" id=1> Price Range By Neighbourhood Group </button>
                         <button onclick="popup(this.id)" id=2> Average Availability By Neighbourhood Group </button>
                         <button onclick="popup(this.id)" id=3> Average Price By Day of The Week </button>
-                        <button onclick="popup(this.id)" id=4> Neighborhoods Trends in Price </button>
-                        <button onclick="popup(this.id)" id=5> Listings Minimum Night to Higher Average Price </button>
-                        <button onclick="popup(this.id)" id=6> Price Distribution by Region </button>
-                        <button onclick="popup(this.id)" id=7> Average Price By Day of The Year</button>
+                        <button onclick="popup(this.id)" id=4> Price Distribution by Region</button>
+                        <button onclick="popup(this.id)" id=5> Average Price for Minimum Nights </button>
+                        <button onclick="popup(this.id)" id=6> Average Price By Day of The Year</button>
                         <script>
                             function popup(ids) {
-                                if(ids ==1){
+                                if(ids == 1){
                                   document.getElementById("analyzer1-box").classList.toggle("active");}
-                                else if(ids ==2){
+                                else if(ids == 2){
                                   document.getElementById("analyzer2-box").classList.toggle("active");}
-                                else if(ids ==3){
+                                else if(ids == 3){
                                   document.getElementById("analyzer3-box").classList.toggle("active");}
-                                else if(ids ==4){
+                                else if(ids == 4){
                                   document.getElementById("analyzer4-box").classList.toggle("active");}
-                                else if(ids ==5){
+                                else if(ids == 5){
                                   document.getElementById("analyzer5-box").classList.toggle("active");}
-                                else if(ids ==6){
+                                else {
                                   document.getElementById("analyzer6-box").classList.toggle("active");}
-                                else{
-                                  document.getElementById("analyzer7-box").classList.toggle("active");}
                             }
                            </script>
                     </div>
@@ -81,12 +78,6 @@
                 <div class = "ana_window6">
                     <div class="close-btn6" onclick="popup(this.id)" id=6>×</div>
                     <img src='{{data6}}'>
-                </div>
-            </div>
-            <div class = "analyzer7" id="analyzer7-box">
-                <div class = "ana_window7">
-                    <div class="close-btn7" onclick="popup(this.id)" id=7>×</div>
-                    <img src='{{data7}}'>
                 </div>
             </div>
             <div class="content">

@@ -10,7 +10,7 @@ from io import BytesIO
 import base64
 from parse_json import read_json # Tristan's parse_json functions
 from parse_json import dict_to_json
-from analyzer import average_availability,price_range_ng,average_dow_p,price_distribution_region
+from analyzer import average_availability,price_range_ng,average_dow_p,price_distribution_region,average_price_for_min_nights,average_price_year
 
 app = Flask(__name__)
 app.secret_key = 'super secret key'
@@ -23,10 +23,9 @@ pattern = r",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"
 data1 = os.path.join("static","images","price_range_ng.png")
 data2 = os.path.join("static","images","average_availability.png")
 data3 = os.path.join("static","images","average_dow_p.png")
-data4 = os.path.join("static","images","average_dow_p.png")
-data5 = os.path.join("static","images","average_dow_p.png")
-data6 = os.path.join("static","images","average_dow_p.png")
-data7 = os.path.join("static","images","average_dow_p.png")
+data4 = os.path.join("static","images","price_distribution_region.png")
+data5 = os.path.join("static","images","average_price_for_min_nights.png")
+data6 = os.path.join("static","images","average_price_year.png")
 
 # load JSON files to dict of lists of dict; need to check if JSON or CSV is faster. CSV is smaller
 files = {}
@@ -54,13 +53,15 @@ def index():
     toc = time.perf_counter()
     print(f"Downloaded the listings in {toc - tic:0.4f} seconds")
     average_availability(files['listings'])
-    # tic = time.perf_counter()
-    # average_dow_p(files['calendar'])
-    # toc = time.perf_counter()
-    # print(f"Downloaded the calendar in {toc - tic:0.4f} seconds")
+    tic = time.perf_counter()
+    average_dow_p(files['calendar'])
+    toc = time.perf_counter()
+    print(f"Downloaded the calendar in {toc - tic:0.4f} seconds")
     price_distribution_region(files['listings'], 'Hispanoam\u00e9rica')
+    average_price_for_min_nights(files['listings'])
+    average_price_year(files['calendar'])
     return render_template('index.html',f_name_list=f_name_list, data1=data1, data2=data2, data3=data3, 
-    data4=data4, data5=data5, data6=data6, data7=data7, enumerate=enumerate)#, menu=menu)
+    data4=data4, data5=data5, data6=data6, enumerate=enumerate)#, menu=menu)
 
 @app.route('/update', methods =['POST'])
 def update():
@@ -91,7 +92,7 @@ def update():
     # session.clear()
     return render_template('searching.html',f_name_list=f_name_list, file=file,
         title=title, num_title=num_title, arr=arr, num_list=num_list, num_total=num_total,
-        data1=data1, data2=data2, data3=data3, data4=data4, data5=data5, data6=data6, data7=data7, enumerate=enumerate) 
+        data1=data1, data2=data2, data3=data3, data4=data4, data5=data5, data6=data6, enumerate=enumerate) 
 
 @app.route('/search', methods = ['POST'])
 def key_Search():
@@ -124,7 +125,7 @@ def key_Search():
 
     return render_template('searching.html',f_name_list=f_name_list, file=file, select= select,
          word=word, title=title, num_title=num_title, arr=arr, num_list=num_list, num_total=num_total,
-         data1=data1, data2=data2, data3=data3, data4=data4, data5=data5, data6=data6, data7=data7, enumerate=enumerate)   
+         data1=data1, data2=data2, data3=data3, data4=data4, data5=data5, data6=data6, enumerate=enumerate)   
 
 @app.route('/del', methods = ['POST'])
 def delfunc():
@@ -158,7 +159,7 @@ def delfunc():
 
     return render_template('searching.html', f_name_list = f_name_list, file=file, arr=arr,
         title=title, num_title=num_title, num_list=num_list, num_total=num_total, index=index,
-        data1=data1, data2=data2, data3=data3, data4=data4, data5=data5, data6=data6, data7=data7, enumerate=enumerate)
+        data1=data1, data2=data2, data3=data3, data4=data4, data5=data5, data6=data6, enumerate=enumerate)
 
 @app.route('/edit', methods = ['POST'])
 def edit():
@@ -197,7 +198,7 @@ def edit():
 
     return render_template('searching.html', f_name_list = f_name_list, file=file, arr=arr, index1=index,
         title=title, num_title=num_title, num_list=num_list, num_total=num_total, 
-        data1=data1, data2=data2, data3=data3, data4=data4, data5=data5, data6=data6, data7=data7, enumerate=enumerate)
+        data1=data1, data2=data2, data3=data3, data4=data4, data5=data5, data6=data6, enumerate=enumerate)
     # return render_template('searching.html', f_name_list=f_name_list, enumerate=enumerate)
 
 @app.route('/export', methods = ['POST'])
@@ -220,7 +221,7 @@ def backupFunction():
     average_availability(files['listings'])
     average_dow_p(files['calendar'])
     return render_template('index.html',BackUpMsg=BackUpMsg, f_name_list=f_name_list,title=title,
-    data1=data1, data2=data2, data3=data3, data4=data4, data5=data5, data6=data6, data7=data7, enumerate=enumerate)
+    data1=data1, data2=data2, data3=data3, data4=data4, data5=data5, data6=data6, enumerate=enumerate)
 
 @app.route('/insert', methods = ['POST'])
 def insert():
@@ -246,7 +247,7 @@ def insert():
 
     return render_template('searching.html', f_name_list = f_name_list, file=file, arr=arr,
         title=title, num_title=num_title, num_list=num_list, num_total=num_total,
-        data1=data1, data2=data2, data3=data3, data4=data4, data5=data5, data6=data6, data7=data7, enumerate=enumerate)
+        data1=data1, data2=data2, data3=data3, data4=data4, data5=data5, data6=data6, enumerate=enumerate)
 
 
 if __name__ == "__main__":
