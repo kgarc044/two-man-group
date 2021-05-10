@@ -10,7 +10,7 @@ from io import BytesIO
 import base64
 from parse_json import read_json # Tristan's parse_json functions
 from parse_json import dict_to_json
-from analyzer import average_availability,price_range_ng,average_dow_p,price_distribution_region,average_price_for_min_nights,average_price_year
+from analyzer import average_availability,price_range_ng,average_dow_p,price_distribution_region,average_price_for_min_nights,average_price_season
 
 app = Flask(__name__)
 app.secret_key = 'super secret key'
@@ -25,7 +25,7 @@ data2 = os.path.join("static","images","average_availability.png")
 data3 = os.path.join("static","images","average_dow_p.png")
 data4 = os.path.join("static","images","price_distribution_region.png")
 data5 = os.path.join("static","images","average_price_for_min_nights.png")
-data6 = os.path.join("static","images","average_price_year.png")
+data6 = os.path.join("static","images","average_price_season.png")
 
 # load JSON files to dict of lists of dict; need to check if JSON or CSV is faster. CSV is smaller
 files = {}
@@ -44,6 +44,12 @@ for i in listing:
 #listings_detailed = read_json('data/listings_detailed.json')
 #reviews_detailed = read_json('data/reviews_detailed.json')
 
+neighborhood_name_list = []
+for entry in files['neighbourhoods']:
+    n = entry[r'neighbourhood']
+    if n not in neighborhood_name_list:
+        neighborhood_name_list.append(n)
+
 @app.route('/')
 def index():
     f_name_list = files.keys()
@@ -57,11 +63,25 @@ def index():
     average_dow_p(files['calendar'])
     toc = time.perf_counter()
     print(f"Downloaded the calendar in {toc - tic:0.4f} seconds")
+    session['neighbor'] = 'Hispanoam\u00e9rica'
     price_distribution_region(files['listings'], 'Hispanoam\u00e9rica')
     average_price_for_min_nights(files['listings'])
-    average_price_year(files['calendar'])
-    return render_template('index.html',f_name_list=f_name_list, data1=data1, data2=data2, data3=data3, 
+    average_price_season(files['calendar'])
+    return render_template('index.html',f_name_list=f_name_list, neighborhood_name_list=neighborhood_name_list, data1=data1, data2=data2, data3=data3, 
     data4=data4, data5=data5, data6=data6, enumerate=enumerate)#, menu=menu)
+
+@app.route('/region', methods = ['POST'])
+def region():
+    f_name_list = files.keys()
+    neighbor = request.form['neighbor_name']
+    session['neighbor'] = neighbor
+    
+    print(neighbor)
+    price_distribution_region(files['listings'], neighbor)
+    data4 = os.path.join("static","images","price_distribution_region.png")
+
+    return render_template('index.html', f_name_list=f_name_list, neighborhood_name_list=neighborhood_name_list, data1=data1, data2=data2, data3=data3, 
+    data4=data4, data5=data5, data6=data6, enumerate=enumerate)
 
 @app.route('/update', methods =['POST'])
 def update():
@@ -90,8 +110,8 @@ def update():
         session['num_list'] = len(arr[0][0])
     session['num_total'] = min(len(arr), 40)
     # session.clear()
-    return render_template('searching.html',f_name_list=f_name_list, file=file,
-        title=title, num_title=num_title, arr=arr, num_list=num_list, num_total=num_total,
+    return render_template('searching.html',f_name_list=f_name_list, file=file, neighborhood_name_list=neighborhood_name_list,
+        title=title, num_title=num_title, arr=arr, num_list=num_list, num_total=num_total, 
         data1=data1, data2=data2, data3=data3, data4=data4, data5=data5, data6=data6, enumerate=enumerate) 
 
 @app.route('/search', methods = ['POST'])
@@ -123,7 +143,7 @@ def key_Search():
         session['num_list'] = len(arr[0][0])
     session['num_total'] = min(len(arr), 40)
 
-    return render_template('searching.html',f_name_list=f_name_list, file=file, select= select,
+    return render_template('searching.html',f_name_list=f_name_list, file=file, select= select, neighborhood_name_list=neighborhood_name_list,
          word=word, title=title, num_title=num_title, arr=arr, num_list=num_list, num_total=num_total,
          data1=data1, data2=data2, data3=data3, data4=data4, data5=data5, data6=data6, enumerate=enumerate)   
 
@@ -156,8 +176,12 @@ def delfunc():
     price_range_ng(files['listings'])
     average_availability(files['listings'])
     average_dow_p(files['calendar'])
+    neighbor = session.get(['neighbor'], None)
+    price_distribution_region(files['listings'], neighbor)
+    average_price_for_min_nights(files['listings'])
+    average_price_season(files['calendar'])
 
-    return render_template('searching.html', f_name_list = f_name_list, file=file, arr=arr,
+    return render_template('searching.html', f_name_list = f_name_list, file=file, arr=arr, neighborhood_name_list=neighborhood_name_list,
         title=title, num_title=num_title, num_list=num_list, num_total=num_total, index=index,
         data1=data1, data2=data2, data3=data3, data4=data4, data5=data5, data6=data6, enumerate=enumerate)
 
@@ -195,9 +219,13 @@ def edit():
     price_range_ng(files['listings'])
     average_availability(files['listings'])
     average_dow_p(files['calendar'])
+    neighbor = session.get(['neighbor'], None)
+    price_distribution_region(files['listings'], neighbor)
+    average_price_for_min_nights(files['listings'])
+    average_price_season(files['calendar'])
 
     return render_template('searching.html', f_name_list = f_name_list, file=file, arr=arr, index1=index,
-        title=title, num_title=num_title, num_list=num_list, num_total=num_total, 
+        title=title, num_title=num_title, num_list=num_list, num_total=num_total, neighborhood_name_list=neighborhood_name_list,
         data1=data1, data2=data2, data3=data3, data4=data4, data5=data5, data6=data6, enumerate=enumerate)
     # return render_template('searching.html', f_name_list=f_name_list, enumerate=enumerate)
 
@@ -220,7 +248,11 @@ def backupFunction():
     price_range_ng(files['listings'])
     average_availability(files['listings'])
     average_dow_p(files['calendar'])
-    return render_template('index.html',BackUpMsg=BackUpMsg, f_name_list=f_name_list,title=title,
+    neighbor = session.get(['neighbor'], None)
+    price_distribution_region(files['listings'], neighbor)
+    average_price_for_min_nights(files['listings'])
+    average_price_season(files['calendar'])
+    return render_template('index.html',BackUpMsg=BackUpMsg, f_name_list=f_name_list,title=title, neighborhood_name_list=neighborhood_name_list,
     data1=data1, data2=data2, data3=data3, data4=data4, data5=data5, data6=data6, enumerate=enumerate)
 
 @app.route('/insert', methods = ['POST'])
@@ -244,9 +276,13 @@ def insert():
     price_range_ng(files['listings'])
     average_availability(files['listings'])
     average_dow_p(files['calendar'])
+    neighbor = session.get(['neighbor'], None)
+    price_distribution_region(files['listings'], neighbor)
+    average_price_for_min_nights(files['listings'])
+    average_price_season(files['calendar'])
 
     return render_template('searching.html', f_name_list = f_name_list, file=file, arr=arr,
-        title=title, num_title=num_title, num_list=num_list, num_total=num_total,
+        title=title, num_title=num_title, num_list=num_list, num_total=num_total, neighborhood_name_list=neighborhood_name_list,
         data1=data1, data2=data2, data3=data3, data4=data4, data5=data5, data6=data6, enumerate=enumerate)
 
 
