@@ -20,13 +20,6 @@ rMsg = "Hello from Server!"
 arr = ['']
 pattern = r",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"
 
-# read cached analytics images
-data1 = os.path.join("static","images","price_range_ng.png")
-data2 = os.path.join("static","images","average_availability.png")
-data3 = os.path.join("static","images","average_dow_p.png")
-data4 = os.path.join("static","images","price_distribution_region.png")
-data5 = os.path.join("static","images","average_price_for_min_nights.png")
-data6 = os.path.join("static","images","average_price_season.png")
 
 # load JSON files to dict of lists of dict; need to check if JSON or CSV is faster. CSV is smaller
 files = {}
@@ -42,8 +35,18 @@ for i in listing:
     #toc = time.perf_counter()
     #print("Reading json "+i+f" in {toc - tic:0.4f} seconds")
 
-#listings_detailed = read_json('data/listings_detailed.json')
-#reviews_detailed = read_json('data/reviews_detailed.json')
+
+# TODO add caches for analytics here
+
+
+# read cached analytics images
+# TODO This will have to be replaced so we can make the initial caches
+data1 = os.path.join("static","images","price_range_ng.png")
+data2 = os.path.join("static","images","average_availability.png")
+data3 = os.path.join("static","images","average_dow_p.png")
+data4 = os.path.join("static","images","price_distribution_region.png")
+data5 = os.path.join("static","images","average_price_for_min_nights.png")
+data6 = os.path.join("static","images","average_price_season.png")
 
 neighborhood_name_list = []
 for entry in files['neighbourhoods']:
@@ -174,6 +177,7 @@ def delfunc():
     del arr[int(test[1])]
 
     session['num_total'] = session.get('num_total', None) -1
+    # TODO each of these will be replaced with the appropriate file-change checks, cache updates, and redraws
     price_range_ng(files['listings'])
     average_availability(files['listings'])
     average_dow_p(files['calendar'])
@@ -217,6 +221,7 @@ def edit():
     # print(files[file].index(temp))
     
     session['arr'] = arr
+    # TODO each of these will be replaced with the appropriate file-change checks, cache updates, and redraws
     price_range_ng(files['listings'])
     average_availability(files['listings'])
     average_dow_p(files['calendar'])
@@ -274,6 +279,7 @@ def insert():
     temp = dict(zip(title, fields))
 
     files[file].append(temp)
+    # TODO each of these will be replaced with the appropriate file-change checks, cache updates, and redraws
     price_range_ng(files['listings'])
     average_availability(files['listings'])
     average_dow_p(files['calendar'])
