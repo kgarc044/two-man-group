@@ -85,12 +85,8 @@ def avg_helper(entries, pipe):
 # takes calendar
 # returns plot of average price by day of week
 # parallelized
-<<<<<<< HEAD
-def average_dow_p(data):
-=======
 def average_dow_p(data, p_c):
 
->>>>>>> 4883a2fea513e4c3b3ff36deb893f72cb04395ea
     days =  [0,0,0,0,0,0,0] # Mon - Sun
     count = [0,0,0,0,0,0,0]
 

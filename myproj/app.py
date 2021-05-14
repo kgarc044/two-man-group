@@ -177,12 +177,8 @@ def delfunc():
     del arr[int(test[1])]
 
     session['num_total'] = session.get('num_total', None) -1
-<<<<<<< HEAD
-    '''price_range_ng(files['listings'])
-=======
     # TODO each of these will be replaced with the appropriate file-change checks, cache updates, and redraws
-    price_range_ng(files['listings'])
->>>>>>> 4883a2fea513e4c3b3ff36deb893f72cb04395ea
+    '''price_range_ng(files['listings'])
     average_availability(files['listings'])
     average_dow_p(files['calendar'])
     neighbor = session.get('neighbor', None)
@@ -225,12 +221,8 @@ def edit():
     # print(files[file].index(temp))
     
     session['arr'] = arr
-<<<<<<< HEAD
-    '''price_range_ng(files['listings'])
-=======
     # TODO each of these will be replaced with the appropriate file-change checks, cache updates, and redraws
-    price_range_ng(files['listings'])
->>>>>>> 4883a2fea513e4c3b3ff36deb893f72cb04395ea
+    '''price_range_ng(files['listings'])
     average_availability(files['listings'])
     average_dow_p(files['calendar'])
     neighbor = session.get('neighbor', None)
@@ -287,12 +279,8 @@ def insert():
     temp = dict(zip(title, fields))
 
     files[file].append(temp)
-<<<<<<< HEAD
-    '''price_range_ng(files['listings'])
-=======
     # TODO each of these will be replaced with the appropriate file-change checks, cache updates, and redraws
-    price_range_ng(files['listings'])
->>>>>>> 4883a2fea513e4c3b3ff36deb893f72cb04395ea
+    '''price_range_ng(files['listings'])
     average_availability(files['listings'])
     average_dow_p(files['calendar'])
     neighbor = session.get('neighbor', None)
