@@ -8,6 +8,7 @@ from multiprocessing import Process, Pipe
 import time
 from color import color_css
 import os
+
 # takes listings
 # returns plot of neighbourhood group average availability
 def average_availability(data):
@@ -33,6 +34,10 @@ def average_availability(data):
         avg = v[0] / v[1]
         labels.append(k)
         vals.append(avg)
+
+# TODO return [[label1, sum1, count1], [label2, sum2, count2], ... ]
+
+# TODO start new function for drawing graph
 
     # make plot
     fig, ax = plt.subplots(figsize=(10,4))
@@ -80,7 +85,12 @@ def avg_helper(entries, pipe):
 # takes calendar
 # returns plot of average price by day of week
 # parallelized
+<<<<<<< HEAD
 def average_dow_p(data):
+=======
+def average_dow_p(data, p_c):
+
+>>>>>>> 4883a2fea513e4c3b3ff36deb893f72cb04395ea
     days =  [0,0,0,0,0,0,0] # Mon - Sun
     count = [0,0,0,0,0,0,0]
 
@@ -88,9 +98,9 @@ def average_dow_p(data):
     pipes = []
     
     s = 0
-    l = int(len(data) / 4) # found more than 4 processes does not benefit
+    l = int(len(data) / p_c) # found more than 4 processes does not benefit
     e = l
-    for _ in range(4-1):
+    for _ in range(p_c-1):
         parent, child = Pipe()
         p = Process(target=avg_helper, args=[data[s:e], child])
         s = e
@@ -117,6 +127,10 @@ def average_dow_p(data):
     for i in [6,0,1,2,3,4,5]:
         avg = days[i] / count[i]
         vals[i] = avg
+
+# TODO return [[label1, sum1, count1], [label2, sum2, count2], ... ]
+
+# TODO start new function for drawing graph
 
     # make plot
     fig, ax = plt.subplots(figsize=(10,4))
@@ -261,7 +275,11 @@ def price_range_ng(data):
         _fil.append(v[2])
         top = v[3] - avg
         _upp.append(int(top))
-    
+   
+# TODO return [[label1, sum1, count1, min1, max1], [label2, sum2, count2, min2, max2], ... ]
+
+# TODO start new function for drawing graph
+
     fil=np.array(_fil)
     upp=np.array(_upp)
     low=np.array(_low)
@@ -298,6 +316,10 @@ def price_distribution_region(data, region):
             group.append(int(entry[r'price']))
     
     group.sort()
+
+# TODO return [region, group]
+
+# TODO start new function for drawing graph
 
     fig, ax = plt.subplots(figsize = (10, 4))
 
@@ -339,6 +361,10 @@ def average_price_for_min_nights(data):
     for i in range(len(days)):
         if count[i] > 0:
             days[i] /= count[i]
+
+# TODO return [[sum1, count1], [sum2, count2], ... ]
+
+# TODO start new function for drawing graph
 
     fig, ax = plt.subplots(figsize = (10, 4))
 
@@ -422,6 +448,10 @@ def average_price_season(data):
     for i in range(len(labels)):
         avg = seasons[i] / count[i]
         vals[i] = avg
+
+# TODO return [[label1, seasons1, count1], [label2, seasons2, count2], ... ]
+
+# TODO start new function for drawing graph
     
     # print(vals)
 
