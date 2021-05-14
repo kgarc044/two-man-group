@@ -36,7 +36,7 @@ def dict_to_json(data, out_file):
     f = open(out_file, 'w')
     
     for entry in data:   
-        json.dump(entry, f)
+        ujson.dump(entry, f)
         f.write('\n')
     
     f.close()
@@ -61,7 +61,7 @@ def read_compressed_json(tarball, file):
     entries = []
 
     for line in f:
-        entries.append(json.loads(line))
+        entries.append(ujson.loads(line))
     
     f.close()
 

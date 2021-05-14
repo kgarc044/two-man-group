@@ -17,7 +17,7 @@
     <div class="links"><a href="#">&laquo;</a> <a class="active" href="#">1</a> <a href="#">2</a> <a href="#">3</a> <a href="#">4</a> <a href="#">&raquo;</a></div>
     </td>
     </tr>-->
-    <h1>Current csv file : {{file}}</h1> 
+    <h1 style="text-align: center;font-family: system-ui;">Current csv file : {{file}}</h1> 
     </tfoot>
     <tbody>
         <tr>
@@ -37,7 +37,7 @@
                      <script>
                       function togglePopup(clicked_id) {
                             document.getElementById("input-field2").innerHTML = '{% for idx,title in enumerate(title) %}<p>{{title}}</p>\
-                            row: '+clicked_id+' col: {{idx}} <input id="input-something" name = "h{{idx}}" value="{{arr[i][0][idx]}}" ="text" class="validate">{% endfor %}\
+                            <input id="input-something" name = "h{{idx}}" value="{{arr[i][0][idx]}}" ="text" class="validate">{% endfor %}\
                             <button id="second-button" value="'+clicked_id+'" name="row">Confirm</button></div>';
                             document.getElementById("popup-2").classList.toggle("active");
                       }

@@ -6,9 +6,9 @@
 body{
     /* height: 100%;
     width: 100%;*/
-    background-image: url(/static/images/1321525.jpg);
+    /*background-image: url(/static/images/1321525.jpg);*/
     background-size: cover;
-    background-color: rgb(0, 0, 0); 
+    background-color: #f0e9e9; 
     font-family: raleway;
     color: black;
     margin: 0;
@@ -19,20 +19,22 @@ body{
     width: 100%;
     background-position: center;
     background-size: cover;
-    padding-left: 5%;
-    padding-right: 5%;
     box-sizing: border-box;
     position: absolute;
 }
+.container .csvDisplay, .container .navbar{
+  padding-left: 5%;
+  padding-right: 5%;
+}
 
 .navbar{
-    width: 100%;
-    height: 30vh;
-    margin: auto;
+    width: 90%;
+    height: auto;
     /* border-style: solid;
     border-color: red; */
     display: flex;
     align-items: center;
+    padding-top: 20px;
 }
 
 .nav{
@@ -67,7 +69,7 @@ nav ul li a{
 
 .csvUpdate{
     height: 100px;
-    width: 300px;
+    width: 400px;
     display: grid;
     flex-direction: row;
     align-items: center ;
@@ -78,31 +80,35 @@ nav ul li a{
 }
 
 .csvUpdate select{
-  width: 150px;
+  width: 250px;
   height: 50px;
   border-radius: 20px;
+  font-size: 20px;
 }
 
 .content{
-    height: 100%;
+    height: 500px;
     width: 100%;
     display: flex;
     justify-content: top;
     align-items: center ;
-    color: rgb(255, 255, 255);
-    /* border-color: blue;
-    border-style: solid;  */
+    background-image: url(/static/images/1321525.jpg);
+    background-repeat: no-repeat;
+    background-size: inherit;
+    margin-top: 20px;
+    /*border-color: blue;
+    border-style: solid;*/
 }
 
-.content .wrapper{
-  width: 1500px;
-  height: 100px;
+.container .wrapper{
+  flex-direction: row;
+  width: inherit;
   display: flex;
-  position: absolute;
-  top: 32%;
+  align-content: center;
+  justify-content: flex-end;
 }
 
-.content .wrapper .backupblock{
+.containe .wrapper .backupblock{
     width: 90px;
     height: 60px;
     position: relative;
@@ -110,7 +116,7 @@ nav ul li a{
     left: 20px;
 }
 
-.content .wrapper .insertblock{
+.containe .wrapper .insertblock{
   width: 200px;
   height: 60px;
   position: relative;
@@ -128,13 +134,14 @@ nav ul li a{
   bottom: -350;
 }
 
-.content select{
-  width: 150px;
+.container select{
+  width: 200px;
   height: 50px;
   border-radius: 20px;
+  font-size: 20px;
 }
 
-.content input{
+.container input{
     width: 350px;
     max-width: 840px;
     height: 55px;
@@ -144,55 +151,28 @@ nav ul li a{
     outline: none;
     margin: 20px 0;
     font-size: 16px;
-    /* border-color: green;
-    border-style: solid; */
+    border-color:rgb(0, 0, 0);
+    border-style:solid;
 }
 ::placeholder{
     font-weight: 500;
     font-size: 16px
 }
-#update_bnt{
-  width: 90px;
-  height: 55px;
-  background: linear-gradient(45deg, #aebddf, rgb(24, 23, 23));
-  position: absolute;
-  border-radius: 6px;
-  padding: 10px 20px;
-  color: rgb(255, 255, 255);
-}
 
-#search_bnt{
-    width: 90px;
-    height: 55px;
-    background: linear-gradient(45deg, #aebddf, rgb(24, 23, 23));
-    border-radius: 6px;
-    padding: 10px 20px;
-    color: rgb(255, 255, 255);
-}
-
-#backup_bnt{
-  width: 90px;
-  height: 55px;
-  background: linear-gradient(45deg, #aebddf, rgb(24, 23, 23));
-  border-radius: 6px;
-  padding: 10px 20px;
-  color: rgb(255, 255, 255);
-
-}
-#insert_bnt{
-  width: 90px;
-  height: 55px;
-  background: linear-gradient(45deg, #aebddf, rgb(24, 23, 23));
-  border-radius: 6px;
-  padding: 10px 20px;
-  color: rgb(255, 255, 255);
+#update_bnt,#search_bnt,#backup_bnt,#insert_bnt,#analyzer_bnt{
+	background:#303036;
+	text-align: center;
+	text-rendering: auto;
+	font-size: 17px;
+	height: 55px;
+  width: 150px;
+  color: white;
 }
 
 h1.bkup-msg{
   width: 1000px;
   height: 50;
   position: relative;
-  bottom: 500px;
   text-align: center;
 }
 
@@ -209,6 +189,11 @@ h1.bkup-msg{
   flex-direction: column;
 }
 
+.dropdown-content .button{
+  width: 200px;
+  height: 55px;
+  background-color:burlywood;
+}
 .popup .content {
   width: 1000px;
   height: auto;
@@ -218,13 +203,14 @@ h1.bkup-msg{
   flex-direction: column;
   transform: translate(-50%,-150%) scale(0);
   z-index: 2;
-  /*text-align: center;*/
+  /* text-align: center; */
   padding: 20px;
   border-radius: 20px;
-  background: #262626;
-  box-shadow:  38px 38px 56px #1e1e1e, 
-              -25px -25px 38px #1e1e1e;
-  /*z-index: 1;*/
+  background: #f9f9f9;
+  box-shadow: 38px 38px 56px #1e1e1e, -25px -25px 38px #1e1e1e;
+  /* z-index: 1; */
+  font-size: 20;
+  font-family: system-ui;
  }
 
  .analyzer1 .ana_window1{
@@ -479,16 +465,6 @@ h1.bkup-msg{
 
 
 /*Analyer*/
-.dropbtn {
-  background: linear-gradient(45deg, #aebddf, rgb(24, 23, 23));
-  color: white;
-  padding: 16px;
-  font-size: 16px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  width: 200;
-}
 
 .dropdown {
   position: relative;
@@ -512,6 +488,16 @@ h1.bkup-msg{
 }
 
 .dropdown-content a:hover {background-color: #f1f1f1}
+.dropdown-content button{
+  width: 300px;
+  height: 55px;
+  background-color:#303036 ;
+  color: white;
+}
+.dropdown-content button:hover{
+  background-color:#363666 ;
+}
+
 
 .dropdown:hover .dropdown-content {
   display: block;
@@ -527,8 +513,6 @@ table.blueTable {
     background-color: #EEEEEE;
     width: 100%;
     text-align: center;
-    font-family:serif;
-    font-size: large;
     border-collapse: collapse;
     position: relative;
   }
@@ -537,19 +521,22 @@ table.blueTable {
     padding: 3px 2px;
   }
   table.blueTable tbody td {
-    font-size: 13px;
+    font-family:serif;
+    font-size: 25px;
   }
   table.blueTable tr:nth-child(even) {
     /*background: #D0E4F5;*/
-    background: #5d7185;
+    background: #ffffff;
   }
   table.blueTable thead {
     /*background: #1C6EA4;*/
-    background: #394953;
-    background: -moz-linear-gradient(top, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
-    background: -webkit-linear-gradient(top, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
-    background: linear-gradient(to bottom, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
-    border-bottom: 2px solid #444444;
+    background: #626364;
+    /*background: -moz-linear-gradient(top, #da8dda 0%, #cf59c0 66%, #da68e9 100%);
+    background: -webkit-linear-gradient(top, #da8dda 0%, #cf59c0 66%, #da68e9 100%);
+    background: linear-gradient(to bottom, #da8dda 0%, #cf59c0 66%, #da68e9 100%);
+    */border-bottom: 2px solid #444444;
+    color: white;
+    font-size: 25;
   }
   table.blueTable thead th {
     font-size: 15px;

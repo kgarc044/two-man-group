@@ -55,7 +55,7 @@ for entry in files['neighbourhoods']:
 def index():
     f_name_list = files.keys()
     session.clear()
-    tic = time.perf_counter()
+    '''tic = time.perf_counter()
     price_range_ng(files['listings'])
     toc = time.perf_counter()
     print(f"Downloaded the listings in {toc - tic:0.4f} seconds")
@@ -67,7 +67,7 @@ def index():
     session['neighbor'] = 'Hispanoam\u00e9rica'
     price_distribution_region(files['listings'], 'Hispanoam\u00e9rica')
     average_price_for_min_nights(files['listings'])
-    average_price_season(files['calendar'])
+    average_price_season(files['calendar'])'''
     return render_template('index.html',f_name_list=f_name_list, neighborhood_name_list=neighborhood_name_list, data1=data1, data2=data2, data3=data3, 
     data4=data4, data5=data5, data6=data6, enumerate=enumerate)#, menu=menu)
 
@@ -174,13 +174,13 @@ def delfunc():
     del arr[int(test[1])]
 
     session['num_total'] = session.get('num_total', None) -1
-    price_range_ng(files['listings'])
+    '''price_range_ng(files['listings'])
     average_availability(files['listings'])
     average_dow_p(files['calendar'])
     neighbor = session.get('neighbor', None)
     price_distribution_region(files['listings'], neighbor)
     average_price_for_min_nights(files['listings'])
-    average_price_season(files['calendar'])
+    average_price_season(files['calendar'])'''
 
     return render_template('searching.html', f_name_list = f_name_list, file=file, arr=arr, neighborhood_name_list=neighborhood_name_list,
         title=title, num_title=num_title, num_list=num_list, num_total=num_total, index=index,
@@ -217,13 +217,13 @@ def edit():
     # print(files[file].index(temp))
     
     session['arr'] = arr
-    price_range_ng(files['listings'])
+    '''price_range_ng(files['listings'])
     average_availability(files['listings'])
     average_dow_p(files['calendar'])
     neighbor = session.get('neighbor', None)
     price_distribution_region(files['listings'], neighbor)
     average_price_for_min_nights(files['listings'])
-    average_price_season(files['calendar'])
+    average_price_season(files['calendar'])'''
 
     return render_template('searching.html', f_name_list = f_name_list, file=file, arr=arr, index1=index,
         title=title, num_title=num_title, num_list=num_list, num_total=num_total, neighborhood_name_list=neighborhood_name_list,
@@ -246,13 +246,13 @@ def backupFunction():
     dict_to_json(files[file],"data/"+file+"-backup.json")
     BackUpMsg = "New "+file+" has been backed up!!!"
     files[file+"-backup"]=read_json("data/"+file+"-backup.json")
-    price_range_ng(files['listings'])
+    '''price_range_ng(files['listings'])
     average_availability(files['listings'])
     average_dow_p(files['calendar'])
     neighbor = session.get('neighbor', None)
     price_distribution_region(files['listings'], neighbor)
     average_price_for_min_nights(files['listings'])
-    average_price_season(files['calendar'])
+    average_price_season(files['calendar'])'''
     return render_template('index.html',BackUpMsg=BackUpMsg, f_name_list=f_name_list,title=title, neighborhood_name_list=neighborhood_name_list,
     data1=data1, data2=data2, data3=data3, data4=data4, data5=data5, data6=data6, enumerate=enumerate)
 
@@ -274,13 +274,13 @@ def insert():
     temp = dict(zip(title, fields))
 
     files[file].append(temp)
-    price_range_ng(files['listings'])
+    '''price_range_ng(files['listings'])
     average_availability(files['listings'])
     average_dow_p(files['calendar'])
     neighbor = session.get('neighbor', None)
     price_distribution_region(files['listings'], neighbor)
     average_price_for_min_nights(files['listings'])
-    average_price_season(files['calendar'])
+    average_price_season(files['calendar'])'''
 
     return render_template('searching.html', f_name_list = f_name_list, file=file, arr=arr,
         title=title, num_title=num_title, num_list=num_list, num_total=num_total, neighborhood_name_list=neighborhood_name_list,

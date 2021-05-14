@@ -4,44 +4,100 @@
         <title>
             Madrid Airbnb Data Analyzer
         </title>
-        <link rel="stylesheet" type = "text/css" href="{{ url_for('static', filename='style.css') }}" />>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" type = "text/css" href="{{ url_for('static', filename='style.css') }}" />
         <script src="{{ url_for('static', filename='index.js') }}"></script>
     </head>
     <body>
         <div class="container">
             <div class="navbar">
                 <a href = "/"><img src="{{ url_for('static', filename='images/logo_2.png') }}" alt="logo"></a>
-                <nav>
+                <!--<nav>
                     <ul>
                         <li><a href='/analyzer' class="btn">Madrid Airbnb Data Analyzer</a></li>
                     </ul>
-                </nav>
-                <div class = "dropdown" style="position: relative;left: 50%;">
-                    <button class="dropbtn" style="color:white; align-items: center;">Analyzer</button>
-                    <div class = "dropdown-content">
-                        <button onclick="popup(this.id)" id=1> Price Range By Neighbourhood Group </button>
-                        <button onclick="popup(this.id)" id=2> Average Availability By Neighbourhood Group </button>
-                        <button onclick="popup(this.id)" id=3> Average Price By Day of The Week </button>
-                        <button onclick="popup(this.id)" id=4> Price Distribution by Region</button>
-                        <button onclick="popup(this.id)" id=5> Average Price for Minimum Nights </button>
-                        <button onclick="popup(this.id)" id=6> Average Price By Season</button>
-                        <script>
-                            function popup(ids) {
-                                if(ids == 1){
-                                  document.getElementById("analyzer1-box").classList.toggle("active");}
-                                else if(ids == 2){
-                                  document.getElementById("analyzer2-box").classList.toggle("active");}
-                                else if(ids == 3){
-                                  document.getElementById("analyzer3-box").classList.toggle("active");}
-                                else if(ids == 4){
-                                  document.getElementById("analyzer4-box").classList.toggle("active");}
-                                else if(ids == 5){
-                                  document.getElementById("analyzer5-box").classList.toggle("active");}
-                                else {
-                                  document.getElementById("analyzer6-box").classList.toggle("active");}
-                            }
-                           </script>
+                </nav>-->
+
+                <div class="wrapper">
+                    <div class="csvUpdate" styple = "width:400px;">
+                        <form class="Update_key" method="POST" action="/update">
+                            <!-- Dropdown menu -->
+                            <select name = "fname" >
+                                {% for f_name_list in f_name_list%}
+                                <option value = "{{f_name_list}}" selected >{{f_name_list}}</option>"
+                                {% endfor %}
+                            </select>
+                            <button type="submit" id="update_bnt" > UPDATE CSV </button>
+                        </form>
                     </div>
+
+                    <div class = "function-wrapper" style="align-items: center; display: inline-flex;">
+                        <form class="search_key" method="POST" action="/search">
+                            <select name = "sel">
+                            {% for title in title%}
+                            <option value = "{{title}}" selected >{{title}}</option>"
+                            {% endfor %}
+                            </select>
+                            <input type="text" placeholder="Search for keyword..." name="w">
+                            <button type="submit" id="search_bnt"><i class="fa fa-search"></i> </button>
+                        </form>
+                        <div class="backupblock">
+                            <form class ="backup" method="POST" action="/backup">
+                                <button type="Back Up File" id = "backup_bnt">Back Up</button>
+                            </form>
+                        </div>
+                    <div class = "insertblock">
+                        <button onclick="togglePopup2('0')" name="insert" id="insert_bnt">Insert</button>
+                        <script>
+                            function togglePopup2(clicked_id) {
+                                document.getElementById("input-field").innerHTML = '{% for idx,title in enumerate(title) %}<p>{{title}}</p>\
+                                Field: {{idx + 1}} <input id="input-something" name = "h{{idx}}" value="" ="text" class="validate">{% endfor %}\
+                                <button id="second-button" value="'+clicked_id+'" name="row">Confirm</button></div>';
+                                document.getElementById("popup-1").classList.toggle("active");
+                            }
+                        </script>
+                        <div class="popup" id="popup-1">
+                            <div class="content">
+                                <div class="close-btn" onclick="togglePopup2()">×</div>
+                                    <h1>Insert fields</h1> 
+                            <form class = "insert_row" method ="POST" action="\insert">
+                                <div id="input-field" class="input-field"> </div>
+                            </form>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class = "dropdown">
+                        <button class="dropbtn" style="width:300px;" id = "analyzer_bnt">
+                        <img style = "width: 25; height: 25;" src="{{ url_for('static', filename='images/Ana.png') }}" alt="logo">Analyzer</button>
+                        <div class = "dropdown-content">
+                            <button onclick="popup(this.id)" id=1> Price Range By Neighbourhood Group </button>
+                            <button onclick="popup(this.id)" id=2> Average Availability By Neighbourhood Group </button>
+                            <button onclick="popup(this.id)" id=3> Average Price By Day of The Week </button>
+                            <button onclick="popup(this.id)" id=4> Price Distribution by Region</button>
+                            <button onclick="popup(this.id)" id=5> Average Price for Minimum Nights </button>
+                            <button onclick="popup(this.id)" id=6> Average Price By Season</button>
+                            <script>
+                                function popup(ids) {
+                                    if(ids == 1){
+                                    document.getElementById("analyzer1-box").classList.toggle("active");}
+                                    else if(ids == 2){
+                                    document.getElementById("analyzer2-box").classList.toggle("active");}
+                                    else if(ids == 3){
+                                    document.getElementById("analyzer3-box").classList.toggle("active");}
+                                    else if(ids == 4){
+                                    document.getElementById("analyzer4-box").classList.toggle("active");}
+                                    else if(ids == 5){
+                                    document.getElementById("analyzer5-box").classList.toggle("active");}
+                                    else {
+                                    document.getElementById("analyzer6-box").classList.toggle("active");}
+                                }
+                            </script>
+                        </div>
+                    </div>
+                </div> 
+
+                    
                 </div>
             </div>
             <div class = "analyzer1" id="analyzer1-box">
@@ -89,52 +145,7 @@
                 </div>
             </div>
             <div class="content">
-                <div class="wrapper">
-                    <div class="csvUpdate">
-                        <form class="Update_key" method="POST" action="/update">
-                            <!-- Dropdown menu -->
-                            <select name = "fname" >
-                                {% for f_name_list in f_name_list%}
-                                <option value = "{{f_name_list}}" selected >{{f_name_list}}</option>"
-                                {% endfor %}
-                            </select>
-                            <button type="submit" id="update_bnt" > UPDATE CSV </button>
-                        </form>
-                    </div>
-                    <form class="search_key" method="POST" action="/search">
-                        <select name = "sel">
-                        {% for title in title%}
-                        <option value = "{{title}}" selected >{{title}}</option>"
-                        {% endfor %}
-                        </select>
-                        <input type="text" placeholder="Search for keyword..." name="w">
-                        <button type="submit" id="search_bnt"> Search </button>
-                    </form>
-                    <div class="backupblock">
-                        <form class ="backup" method="POST" action="/backup">
-                            <button type="Back Up File" id = "backup_bnt">Back Up</button>
-                        </form>
-                    </div>
-                    <div class = "insertblock">
-                        <button onclick="togglePopup2('0')" name="insert" id="insert_bnt">Insert</button>
-                        <script>
-                            function togglePopup2(clicked_id) {
-                                document.getElementById("input-field").innerHTML = '{% for idx,title in enumerate(title) %}<p>{{title}}</p>\
-                                Field: {{idx + 1}} <input id="input-something" name = "h{{idx}}" value="" ="text" class="validate">{% endfor %}\
-                                <button id="second-button" value="'+clicked_id+'" name="row">Confirm</button></div>';
-                                document.getElementById("popup-1").classList.toggle("active");
-                            }
-                        </script>
-                        <div class="popup" id="popup-1">
-                            <div class="content">
-                                <div class="close-btn" onclick="togglePopup2()">×</div>
-                                    <h1>Insert fields</h1> 
-                            <form class = "insert_row" method ="POST" action="\insert">
-                                <div id="input-field" class="input-field"> </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+                <h1 style="text-shadow: 4px 3px #000000;width: 100%;font-size: 100px;color: white;text-align: center;">Madrid Airbnb Data Analyzer</h1>
             </div>
             <h1 class = "bkup-msg">{{BackUpMsg}}</h1>
             <!--<form action="response" method="POST">
