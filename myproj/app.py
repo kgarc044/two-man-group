@@ -37,10 +37,32 @@ for i in listing:
 
 
 # TODO add caches for analytics here
+prc_rng_ng_cache = []               # list of elements: [label, sum, count, min, max]
+avg_avail_cache = []         # list of elements: [label, sum, count]
+avg_dow_cache = []                  # list of elements: [label, sum, count]; seven elements
+prc_distro_rgn_cache = []    # list of elements: [region, price list]; might make dictionary
+avg_prc_min_nts_cache = [] # list of elements: [sum, count]; list index is number of nights
+avg_prc_ssn_cache = []         # list of elements: [label, sum, count]; four elements
+
+# TODO build analytics caches in async if possible; dummy function calls
+#cache_avg_avail(files)
+#cache_avg_dow(files)
+#cache_prc_rng_ng(files)
+#cache_prc_dstro_rgn(files)
+#cache_avg_prc_min_nts(files)
+#cache_avg_prc_ssn(files)
+
+# TODO plot analytics from cache; dummy function calls
+#plot_avg_avail(prc_rng_ng_cache)
+#plot_avg_dow(avg_avail_cache)
+#plot_prc_rng_ng(avg_dow_cache)
+#plot_prc_dstro_rgn(prc_distro_rgn_cache)
+#plot_avg_prc_min_nts(avg_prc_min_nts_cache)
+#plot_avg_prc_ssnavg_prc_ssn_cache)
 
 
 # read cached analytics images
-# TODO This will have to be replaced so we can make the initial caches
+# can still be used, until analytics caches are built for next update
 data1 = os.path.join("static","images","price_range_ng.png")
 data2 = os.path.join("static","images","average_availability.png")
 data3 = os.path.join("static","images","average_dow_p.png")
