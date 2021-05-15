@@ -43,11 +43,15 @@
                         </form>
                         <div class="backupblock">
                             <form class ="backup" method="POST" action="/backup">
-                                <button type="Back Up File" id = "backup_bnt">Back Up</button>
+                                <button type="Back Up File" id = "backup_bnt">
+                                    <img style = "width: 17;height: 17;position: relative;
+                                    right: 10;" src="{{ url_for('static', filename='images/bkup.png') }}" alt="logo">Back Up</button>
                             </form>
                         </div>
                     <div class = "insertblock">
-                        <button onclick="togglePopup2('0')" name="insert" id="insert_bnt">Insert</button>
+                        <button onclick="togglePopup2('0')" name="insert" id="insert_bnt">
+                            <img style = "width: 17;height: 17;position: relative;
+                            right: 10;" src="{{ url_for('static', filename='images/insert.png') }}" alt="logo">Insert</button>
                         <script>
                             function togglePopup2(clicked_id) {
                                 document.getElementById("input-field").innerHTML = '{% for idx,title in enumerate(title) %}<p>{{title}}</p>\
@@ -69,7 +73,7 @@
                     </div>
                     <div class = "dropdown">
                         <button class="dropbtn" style="width:300px;" id = "analyzer_bnt">
-                        <img style = "width: 25; height: 25;" src="{{ url_for('static', filename='images/Ana.png') }}" alt="logo">Analyzer</button>
+                        <img style = "width: 25;height: 25;position: absolute;left: 80;top: 15;" src="{{ url_for('static', filename='images/Ana.png') }}" alt="logo">Analyzer</button>
                         <div class = "dropdown-content">
                             <button onclick="popup(this.id)" id=1> Price Range By Neighbourhood Group </button>
                             <button onclick="popup(this.id)" id=2> Average Availability By Neighbourhood Group </button>

@@ -176,6 +176,10 @@ h1.bkup-msg{
   text-align: center;
 }
 
+.insertblock .img{
+  position: absolute;
+}
+
 #map{
     height: 60%;
     width: 60%;
