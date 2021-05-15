@@ -4,6 +4,5 @@ data/
 Lib/
 Scripts/
 *.cfg
-static/images/*.png
 test.py
 ../.vscode/cs180-workspace-may5.code-workspace
