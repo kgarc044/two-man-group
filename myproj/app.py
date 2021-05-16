@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request, session, json
 #from flask_wtf import FlaskForm
 #from wtforms import StringField, SubmitField
 import time
@@ -291,7 +291,7 @@ def insert():
     return render_template('searching.html', f_name_list = f_name_list, file=file, arr=arr,
         title=title, num_title=num_title, num_list=num_list, num_total=num_total, neighborhood_name_list=neighborhood_name_list,
         data1=data1, data2=data2, data3=data3, data4=data4, data5=data5, data6=data6, enumerate=enumerate)
-
+        
 @app.after_request
 def add_header(response):
     # response.cache_control.no_store = True

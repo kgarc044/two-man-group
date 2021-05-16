@@ -54,18 +54,18 @@
                             right: 10;" src="{{ url_for('static', filename='images/insert.png') }}" alt="logo">Insert</button>
                         <script>
                             function togglePopup2(clicked_id) {
-                                document.getElementById("input-field").innerHTML = '{% for idx,title in enumerate(title) %}<p>{{title}}</p>\
+                                document.getElementById("input-field").innerHTML = `{% for idx,title in enumerate(title) %}<p>{{title}}</p>\
                                 Field: {{idx + 1}} <input id="input-something" name = "h{{idx}}" value="" ="text" class="validate">{% endfor %}\
-                                <button id="second-button" value="'+clicked_id+'" name="row">Confirm</button></div>';
-                                document.getElementById("popup-1").classList.toggle("active");
+                                <button id="second-button" value="'+clicked_id+'" name="row"><img src="{{ url_for('static', filename='images/save.png') }}" id="save"></button></div>`;
+                                document.getElementById("popingup").classList.toggle("active");
                             }
                         </script>
-                        <div class="popup" id="popup-1">
+                        <div class="popup1" id="popingup">
                             <div class="content">
-                                <div class="close-btn" onclick="togglePopup2()">×</div>
+                                <div class="close-btn" onclick="togglePopup2()"><img src="{{ url_for('static', filename='images/cancel.png') }}" id="cancel"></div>
                                     <h1>Insert fields</h1> 
                             <form class = "insert_row" method ="POST" action="\insert">
-                                <div id="input-field" class="input-field"> </div>
+                                <div id="input-field" class="input-field"></div>
                             </form>
                             </div>
                         </div>
@@ -106,25 +106,25 @@
             </div>
             <div class = "analyzer1" id="analyzer1-box">
                 <div class = "ana_window1">
-                    <div class="close-btn1" onclick="popup(this.id)" id=1>×</div>
+                    <div class="close-btn1" onclick="popup(this.id)" id=1><img src="{{ url_for('static', filename='images/cancel.png') }}" id="cancel"></div>
                     <img src='{{data1}}'>
                 </div>
             </div>
             <div class = "analyzer2" id="analyzer2-box">
                 <div class = "ana_window2">
-                    <div class="close-btn2" onclick="popup(this.id)" id=2>×</div>
+                    <div class="close-btn2" onclick="popup(this.id)" id=2><img src="{{ url_for('static', filename='images/cancel.png') }}" id="cancel"></div>
                     <img src='{{data2}}'>
                 </div>
             </div>
             <div class = "analyzer3" id="analyzer3-box">
                 <div class = "ana_window3">
-                    <div class="close-btn3" onclick="popup(this.id)" id=3>×</div>
+                    <div class="close-btn3" onclick="popup(this.id)" id=3><img src="{{ url_for('static', filename='images/cancel.png') }}" id="cancel"></div>
                     <img src='{{data3}}'>
                 </div>
             </div>
             <div class = "analyzer4" id="analyzer4-box">
                 <div class = "ana_window4">
-                    <div class="close-btn4" onclick="popup(this.id)" id=4>×</div>
+                    <div class="close-btn4" onclick="popup(this.id)" id=4><img src="{{ url_for('static', filename='images/cancel.png') }}" id="cancel"></div>
                     <img src='{{data4}}'>
                     <form class = "Update_region" method="POST" action="/region">
                         <select name = "neighbor_name"> 
@@ -138,13 +138,13 @@
             </div>
             <div class = "analyzer5" id="analyzer5-box">
                 <div class = "ana_window5">
-                    <div class="close-btn5" onclick="popup(this.id)" id=5>×</div>
+                    <div class="close-btn5" onclick="popup(this.id)" id=5><img src="{{ url_for('static', filename='images/cancel.png') }}" id="cancel"></div>
                     <img src='{{data5}}'>
                 </div>
             </div>
             <div class = "analyzer6" id="analyzer6-box">
                 <div class = "ana_window6">
-                    <div class="close-btn6" onclick="popup(this.id)" id=6>×</div>
+                    <div class="close-btn6" onclick="popup(this.id)" id=6><img src="{{ url_for('static', filename='images/cancel.png') }}" id="cancel"></div>
                     <img src='{{data6}}'>
                 </div>
             </div>
