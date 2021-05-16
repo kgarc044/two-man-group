@@ -437,7 +437,7 @@ def average_price_season(data):
                 count[i] += result[1][i]
 
     labels = [r'Winter', r'Spring', r'Summer', r'Autumn']
-    vals = [0, 0, 0, 0, 0, 0, 0]
+    vals = [0, 0, 0, 0, 0, 0, 0] # why are there seven elements and four seasons?
     for i in range(len(count)):
         if count[i] == 0:
             count[i] = 1
