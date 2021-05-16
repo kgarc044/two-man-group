@@ -58,7 +58,7 @@ avg_prc_ssn_cache = []         # list of elements: [label, sum, count]; four ele
 #plot_prc_rng_ng(avg_dow_cache)
 #plot_prc_dstro_rgn(prc_distro_rgn_cache)
 #plot_avg_prc_min_nts(avg_prc_min_nts_cache)
-#plot_avg_prc_ssnavg_prc_ssn_cache)
+#plot_avg_prc_ssn(avg_prc_ssn_cache)
 
 
 # read cached analytics images

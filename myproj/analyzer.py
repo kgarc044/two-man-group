@@ -9,6 +9,7 @@ import time
 from color import color_css
 import os
 
+
 # takes listings
 # returns plot of neighbourhood group average availability
 def average_availability(data):
