@@ -36,15 +36,15 @@ for i in listing:
     #print("Reading json "+i+f" in {toc - tic:0.4f} seconds")
 
 
-# TODO add caches for analytics here
-prc_rng_ng_cache = []               # list of elements: [label, sum, count, min, max]
-avg_avail_cache = []         # list of elements: [label, sum, count]
-avg_dow_cache = []                  # list of elements: [label, sum, count]; seven elements
-prc_distro_rgn_cache = []    # list of elements: [region, price list]; might make dictionary
-avg_prc_min_nts_cache = [] # list of elements: [sum, count]; list index is number of nights
-avg_prc_ssn_cache = []         # list of elements: [label, sum, count]; four elements
+# caches for analytics; dictionaries, entries structured as listed
+avg_avail_cache = {}        # {"label" : [sum, count]}
+avg_dow_cache = {}          # {"label" : [sum, count]}
+prc_rng_ng_cache = {}       # {"label" : [sum, count, max, min]}
+prc_distro_rgn_cache = {}   # {"region" : [prices]}
+avg_prc_min_nts_cache = {}  # {"label" : [sum, count]}
+avg_prc_ssn_cache = {}      # {"label" : [sum, count]}
 
-# TODO build analytics caches in async if possible; dummy function calls
+# TODO implement functions in analytics.py and uncomment
 #cache_avg_avail(files)
 #cache_avg_dow(files)
 #cache_prc_rng_ng(files)
@@ -52,7 +52,7 @@ avg_prc_ssn_cache = []         # list of elements: [label, sum, count]; four ele
 #cache_avg_prc_min_nts(files)
 #cache_avg_prc_ssn(files)
 
-# TODO plot analytics from cache; dummy function calls
+# TODO implement functions in analytics.py and uncomment
 #plot_avg_avail(prc_rng_ng_cache)
 #plot_avg_dow(avg_avail_cache)
 #plot_prc_rng_ng(avg_dow_cache)
@@ -61,7 +61,7 @@ avg_prc_ssn_cache = []         # list of elements: [label, sum, count]; four ele
 #plot_avg_prc_ssn(avg_prc_ssn_cache)
 
 
-# read cached analytics images
+# maybe give descriptive names
 # can still be used, until analytics caches are built for next update
 data1 = os.path.join("static","images","price_range_ng.png")
 data2 = os.path.join("static","images","average_availability.png")
