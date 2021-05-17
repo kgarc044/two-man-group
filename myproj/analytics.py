@@ -203,9 +203,8 @@ def plot_avg_prc_min_nts(cache, img_path):
 
 ### average price by season functions
 
-def cache_avg_prc_ssn(files):
+def average_helper_season(data, pipe):
 
-    data = files['calendar']
     groups = {}
 
     groups['Winter'] = [0, 0]
@@ -219,19 +218,66 @@ def cache_avg_prc_ssn(files):
         if month in [12, 1, 2]:
             groups['Winter'][0] += float(entry[r'price'])
             groups['Winter'][1] += 1
-        if month in [3, 4, 5]:
+        elif month in [3, 4, 5]:
             groups['Spring'][0] += float(entry[r'price'])
             groups['Spring'][1] += 1
-        if month in [6, 7, 8]:
+        elif month in [6, 7, 8]:
             groups['Summer'][0] += float(entry[r'price'])
             groups['Summer'][1] += 1
-        if month in [9, 10, 11]:
+        elif month in [9, 10, 11]:
             groups['Fall'][0] += float(entry[r'price'])
             groups['Fall'][1] += 1
+    pipe.send(groups)
+    pipe.close()
+
+def cache_avg_prc_ssn(files):
+
+    data = files['calendar']
+    groups = {}
+
+    groups['Winter'] = [0, 0]
+    groups['Spring'] = [0, 0]
+    groups['Summer'] = [0, 0]
+    groups['Fall'] = [0, 0]
+
+    processes = []
+    pipes = []
     
+    s = 0
+    l = int(len(data) / 4) # found more than 4 processes does not benefit
+    e = l
+    for _ in range(4-1):
+        parent, child = Pipe()
+        p = Process(target=average_helper_season, args=[data[s:e], child])
+        s = e
+        e += l
+        p.start()
+        processes.append(p)
+        pipes.append(parent)
+
+    parent, child = Pipe()
+    p = Process(target=average_helper_season, args=[data[s:], child])
+    p.start()
+    processes.append(p)
+    pipes.append(parent)
+
+
+    for p in range(len(processes)):
+        processes[p].join()
+        result = pipes[p].recv()
+        groups['Winter'][0] += result['Winter'][0]
+        groups['Winter'][1] += result['Winter'][1]
+        groups['Spring'][0] += result['Spring'][0]
+        groups['Spring'][1] += result['Spring'][1]
+        groups['Summer'][0] += result['Summer'][0]
+        groups['Summer'][1] += result['Summer'][1]
+        groups['Fall'][0] += result['Fall'][0]
+        groups['Fall'][1] += result['Fall'][1]
+
     return groups
 
 def plot_avg_prc_ssn(cache, img_path):
+
     labels = [] # break cache into lists of labels and averages of data
     vals = []
     
