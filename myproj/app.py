@@ -11,6 +11,7 @@ import base64
 from parse_json import read_json # Tristan's parse_json functions
 from parse_json import dict_to_json
 from analyzer import average_availability,price_range_ng,average_dow_p,price_distribution_region,average_price_for_min_nights,average_price_season
+from analytics import *
 
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
@@ -36,36 +37,22 @@ for i in listing:
     #print("Reading json "+i+f" in {toc - tic:0.4f} seconds")
 
 
-# caches for analytics; dictionaries, entries structured as listed
-avg_avail_cache = {}        # {"label" : [sum, count]}
-avg_dow_cache = {}          # {"label" : [sum, count]}
-prc_rng_ng_cache = {}       # {"label" : [sum, count, max, min]}
-prc_distro_rgn_cache = {}   # {"region" : [prices]}
-avg_prc_min_nts_cache = {}  # {"label" : [sum, count]}
-avg_prc_ssn_cache = {}      # {"label" : [sum, count]}
 
-# TODO implement functions in analytics.py and uncomment
-#cache_avg_avail(files)
-#cache_avg_dow(files)
-#cache_prc_rng_ng(files)
-#cache_prc_dstro_rgn(files)
-#cache_avg_prc_min_nts(files)
-#cache_avg_prc_ssn(files)
+# create caches
+avg_avail_cache = cache_avg_avail(files)
+avg_dow_cache = cache_avg_dow(files)
+prc_rng_ng_cache = cache_prc_rng_ng(files)
+prc_distro_rgn_cache = cache_prc_distro_rgn(files)
+avg_prc_min_nts_cache = cache_avg_prc_min_nts(files)
+avg_prc_ssn_cache = cache_avg_prc_ssn(files)
 
-# TODO implement functions in analytics.py and uncomment
-#plot_avg_avail(prc_rng_ng_cache)
-#plot_avg_dow(avg_avail_cache)
-#plot_prc_rng_ng(avg_dow_cache)
-#plot_prc_dstro_rgn(prc_distro_rgn_cache)
-#plot_avg_prc_min_nts(avg_prc_min_nts_cache)
-#plot_avg_prc_ssn(avg_prc_ssn_cache)
 
 
 # maybe give descriptive names
 # can still be used, until analytics caches are built for next update
-data1 = os.path.join("static","images","price_range_ng.png")
 data2 = os.path.join("static","images","average_availability.png")
 data3 = os.path.join("static","images","average_dow_p.png")
+data1 = os.path.join("static","images","price_range_ng.png")
 data4 = os.path.join("static","images","price_distribution_region.png")
 data5 = os.path.join("static","images","average_price_for_min_nights.png")
 data6 = os.path.join("static","images","average_price_season.png")
@@ -103,7 +90,7 @@ def region():
     session['neighbor'] = neighbor
     
     print(neighbor)
-    price_distribution_region(files['listings'], neighbor)
+    plot_prc_distro_rgn(prc_distro_rgn_cache, neighbor, os.path.join("static","images","price_distribution_region.png"))
     data4 = os.path.join("static","images","price_distribution_region.png")
 
     return render_template('index.html', f_name_list=f_name_list, neighborhood_name_list=neighborhood_name_list, data1=data1, data2=data2, data3=data3, 
@@ -177,7 +164,7 @@ def key_Search():
 def delfunc():
     f_name_list = files.keys()
     arr = session.get('arr', None)
-    file = session.get('file', None)
+    file = session.get('file', None) # listings, calendar, other options
     num_list = range(session.get('num_list', None))
     num_total = range(session.get('num_total', None) - 1)
     title = list(files[file][0].keys())
@@ -185,9 +172,10 @@ def delfunc():
 
     index = request.values['delete_row']
 
+
     index = index.replace('(', '')
     index = index.replace(')', '')
-    test = index.split(', ')
+    test = index.split(', ') # entry index
 
     # print(files[file][int(test[0])])
     # print(arr[int(test[1])])
@@ -195,18 +183,43 @@ def delfunc():
     for i in range(int(test[1]),session.get('num_total', None)):
         arr[i] = (arr[i][0], int(arr[i][1]) - 1)
 
+    old_val = files[file][int(test[0])]
+
     del files[file][int(test[0])]
     del arr[int(test[1])]
 
     session['num_total'] = session.get('num_total', None) -1
-    # TODO each of these will be replaced with the appropriate file-change checks, cache updates, and redraws
-    '''price_range_ng(files['listings'])
-    average_availability(files['listings'])
-    average_dow_p(files['calendar'])
-    neighbor = session.get('neighbor', None)
-    price_distribution_region(files['listings'], neighbor)
-    average_price_for_min_nights(files['listings'])
-    average_price_season(files['calendar'])'''
+
+    if file == 'listings':
+        remove_avg(avg_avail_cache, old_val['neighbourhood_group'], int(old_val['availability_365']))
+        remove_rng(prc_rng_ng_cache, files, old_val['neighbourhood_group'], float(old_val['price']))
+        remove_distro(prc_distro_rgn_cache, old_val['neighbourhood'], float(old_val['price']))
+        remove_avg(avg_prc_min_nts_cache, old_val['minimum_nights'], float(old_val['price']))
+
+        plot_avg_avail(avg_avail_cache, os.path.join('static', 'images', 'average_availability.png'))
+        plot_prc_rng_ng(prc_rng_ng_cache, os.path.join("static","images","price_range_ng.png"))
+        plot_avg_prc_min_nts(avg_prc_min_nts_cache, os.path.join("static","images","average_price_for_min_nights.png"))
+
+    elif file == 'calendar':
+        labels = [r'Sunday', r'Monday', r'Tuesday', r'Wednesday', r'Thursday', r'Friday', r'Saturday']
+        seasons = ['Winter', 'Spring', 'Summer', 'Autumn']
+        day = old_val[r'date'].split(r'-')
+        day_i = datetime.date(int(day[0]), int(day[1]), int(day[2])).weekday()
+        month = int(day[1])
+        season = 0
+        if month in [3, 4, 5]:
+            season = 1
+        if month in [6, 7, 8]:
+            season = 2
+        if month in [9, 10, 11]:
+            season = 3 
+
+        remove_avg(avg_dow_cache, labels[day_i], float(old_val['price']))
+        remove_avg(avg_prc_ssn_cache, seasons[season], float(old_val['price']))
+
+
+        plot_avg_dow(avg_dow_cache, os.path.join("static","images","average_dow_p.png"))
+        plot_avg_prc_ssn(avg_prc_ssn_cache, os.path.join("static","images","average_price_season.png"))
 
     return render_template('searching.html', f_name_list = f_name_list, file=file, arr=arr, neighborhood_name_list=neighborhood_name_list,
         title=title, num_title=num_title, num_list=num_list, num_total=num_total, index=index,
@@ -233,7 +246,9 @@ def edit():
     temp2 = dict(zip(title, fields))
     # print(temp2)
     # print(file_index)
-    files[file][file_index] = temp2
+    old_entry = files[file][file_index] # old entry from files
+    files[file][file_index] = temp2 # change value in files
+
     
     # for i in num_title:
     #     fields.append(request.form['h'+str(i)])
@@ -243,14 +258,39 @@ def edit():
     # print(files[file].index(temp))
     
     session['arr'] = arr
-    # TODO each of these will be replaced with the appropriate file-change checks, cache updates, and redraws
-    '''price_range_ng(files['listings'])
-    average_availability(files['listings'])
-    average_dow_p(files['calendar'])
-    neighbor = session.get('neighbor', None)
-    price_distribution_region(files['listings'], neighbor)
-    average_price_for_min_nights(files['listings'])
-    average_price_season(files['calendar'])'''
+
+    if file == 'listings':
+        modify_avg(avg_avail_cache, temp2['neighbourhood_group'], int(temp2['availability_365']), int(old_entry['availability_365']))
+        modify_rng(prc_rng_ng_cache, files, temp2['neighbourhood_group'], float(temp2['price']), float(old_entry['price']))
+        modify_distro(prc_distro_rgn_cache, temp2['neighbourhood'], float(temp2['price']), float(old_entry['price']))
+        modify_avg(avg_prc_min_nts_cache, temp2['minimum_nights'], float(temp2['price']), float(old_entry['price']))
+
+        plot_avg_avail(avg_avail_cache, os.path.join('static', 'images', 'average_availability.png'))
+        plot_prc_rng_ng(prc_rng_ng_cache, os.path.join("static","images","price_range_ng.png"))
+        plot_avg_prc_min_nts(avg_prc_min_nts_cache, os.path.join("static","images","average_price_for_min_nights.png"))
+
+        if temp2['neighbourhood'] not in neighborhood_name_list:
+            neighborhood_name_list.append(temp2['neighbourhood'])
+
+    elif file == 'calendar':
+        labels = [r'Sunday', r'Monday', r'Tuesday', r'Wednesday', r'Thursday', r'Friday', r'Saturday']
+        seasons = ['Winter', 'Spring', 'Summer', 'Autumn']
+        day = temp2[r'date'].split(r'-')
+        day_i = datetime.date(int(day[0]), int(day[1]), int(day[2])).weekday()
+        month = int(day[1])
+        season = 0
+        if month in [3, 4, 5]:
+            season = 1
+        if month in [6, 7, 8]:
+            season = 2
+        if month in [9, 10, 11]:
+            season = 3 
+
+        modify_avg(avg_dow_cache, labels[day_i], float(temp2['price']), float(old_entry['price']))
+        modify_avg(avg_prc_ssn_cache, seasons[season], float(temp2['price']), float(old_entry['price']))
+
+        plot_avg_dow(avg_dow_cache, os.path.join("static","images","average_dow_p.png"))
+        plot_avg_prc_ssn(avg_prc_ssn_cache, os.path.join("static","images","average_price_season.png"))
 
     return render_template('searching.html', f_name_list = f_name_list, file=file, arr=arr, index1=index,
         title=title, num_title=num_title, num_list=num_list, num_total=num_total, neighborhood_name_list=neighborhood_name_list,
@@ -301,14 +341,39 @@ def insert():
     temp = dict(zip(title, fields))
 
     files[file].append(temp)
-    # TODO each of these will be replaced with the appropriate file-change checks, cache updates, and redraws
-    '''price_range_ng(files['listings'])
-    average_availability(files['listings'])
-    average_dow_p(files['calendar'])
-    neighbor = session.get('neighbor', None)
-    price_distribution_region(files['listings'], neighbor)
-    average_price_for_min_nights(files['listings'])
-    average_price_season(files['calendar'])'''
+
+    if file == 'listings':
+        add_avg(avg_avail_cache, temp['neighbourhood_group'], int(temp['availability_365']))
+        add_rng(prc_rng_ng_cache, temp['neighbourhood_group'], float(temp['price']))
+        add_distro(prc_distro_rgn_cache, temp['neighbourhood'], float(temp['price']))
+        add_avg(avg_prc_min_nts_cache, int(temp['minimum_nights']), float(temp['price']))
+
+        plot_avg_avail(avg_avail_cache, os.path.join('static', 'images', 'average_availability.png'))
+        plot_prc_rng_ng(prc_rng_ng_cache, os.path.join("static","images","price_range_ng.png"))
+        plot_avg_prc_min_nts(avg_prc_min_nts_cache, os.path.join("static","images","average_price_for_min_nights.png"))
+
+        if temp2['neighbourhood'] not in neighborhood_name_list:
+            neighborhood_name_list.append(temp2['neighbourhood'])
+
+    elif file == 'calendar':
+        labels = [r'Sunday', r'Monday', r'Tuesday', r'Wednesday', r'Thursday', r'Friday', r'Saturday']
+        seasons = ['Winter', 'Spring', 'Summer', 'Autumn']
+        day = temp[r'date'].split(r'-')
+        day_i = datetime.date(int(day[0]), int(day[1]), int(day[2])).weekday()
+        month = int(day[1])
+        season = 0
+        if month in [3, 4, 5]:
+            season = 1
+        if month in [6, 7, 8]:
+            season = 2
+        if month in [9, 10, 11]:
+            season = 3 
+
+        add_avg(avg_dow_cache, labels[day_i], float(temp['price']))
+        add_avg(avg_prc_ssn_cache, seasons[season], float(temp['price']))
+
+        plot_avg_dow(avg_dow_cache, os.path.join("static","images","average_dow_p.png"))
+        plot_avg_prc_ssn(avg_prc_ssn_cache, os.path.join("static","images","average_price_season.png"))
 
     return render_template('searching.html', f_name_list = f_name_list, file=file, arr=arr,
         title=title, num_title=num_title, num_list=num_list, num_total=num_total, neighborhood_name_list=neighborhood_name_list,

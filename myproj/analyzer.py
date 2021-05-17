@@ -67,7 +67,7 @@ def average_availability(data):
     #return data
 
 
-# helper for average_dow_p
+    # helper for average_dow_p
 def avg_helper(entries, pipe):
     days =  [0,0,0,0,0,0,0] # Mon - Sun
     count = [0,0,0,0,0,0,0]
@@ -86,7 +86,7 @@ def avg_helper(entries, pipe):
 # takes calendar
 # returns plot of average price by day of week
 # parallelized
-def average_dow_p(data, p_c):
+def average_dow_p(data):
 
     days =  [0,0,0,0,0,0,0] # Mon - Sun
     count = [0,0,0,0,0,0,0]
@@ -95,9 +95,9 @@ def average_dow_p(data, p_c):
     pipes = []
     
     s = 0
-    l = int(len(data) / p_c) # found more than 4 processes does not benefit
+    l = int(len(data) / 4) # found more than 4 processes does not benefit
     e = l
-    for _ in range(p_c-1):
+    for _ in range(3):
         parent, child = Pipe()
         p = Process(target=avg_helper, args=[data[s:e], child])
         s = e
