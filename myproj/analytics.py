@@ -73,10 +73,13 @@ def add_distro(cache, label, val):
 def remove_distro(cache, label, val):
     cache[label].remove(val)
 
-def modify_distro(cache, label, val):
-    cache[label].remove(val)
-    cache[label].append(val)
+def modify_distro(cache, label, new_val, old_val):
+    cache[label].remove(old_val)
+    cache[label].append(new_val)
     cache[label].sort()
+
+def add_new_distro(cache, files, label):
+    cache = cache_prc_distro_rgn(cache, files, label)
 
 ### -------------------------------------------------------
 ### Functions for caching and plotting
@@ -157,11 +160,36 @@ def plot_prc_rng_ng(cache, img_path):
 
 ### price distribution by region functions
 
-def cache_prc_distro_rgn(files):
-    pass
+def cache_prc_distro_rgn(cache, files, region):
 
-def plot_prc_distro_rgn(cache, img_path):
-    pass
+    data = files['listings']
+    group = []
+
+    for entry in data:
+        if entry[r'neighbourhood'] == region:
+            group.append(int(entry[r'price']))
+    
+    group.sort()
+
+    cache[region] = group
+
+    return cache
+
+
+def plot_prc_distro_rgn(cache, region, img_path):
+
+    fig, ax = plt.subplots(figsize = (10, 4))
+    print(cache[region])
+    # n, bins, patches = ax.hist(cache[region], bins=[0,10,20,30,40,50,60,70,80,90,100,120,140,160,180,200,250,300,400,500,600,700,800,900,1000])
+    n, bins, patches = ax.hist(cache[region])
+    plt.tight_layout()
+    plt.title('Price Distribution for ' + region)
+    plt.xlabel('Price')
+    plt.ylabel('Frequency')
+    plt.xlim(0, 1000)
+    buf = BytesIO()
+    os_path = os.path.abspath(os.path.dirname(__file__))
+    fig.savefig(os.path.join(os_path, img_path), format='png', bbox_inches='tight')
 
 
 ### average price by minimum nights functions
@@ -176,8 +204,59 @@ def plot_avg_prc_min_nts(cache, img_path):
 ### average price by season functions
 
 def cache_avg_prc_ssn(files):
-    pass
+
+    data = files['calendar']
+    groups = {}
+
+    groups['Winter'] = [0, 0]
+    groups['Spring'] = [0, 0]
+    groups['Summer'] = [0, 0]
+    groups['Fall'] = [0, 0]
+
+    for entry in data:
+        year = entry[r'date'].split(r'-')
+        month = int(year[1])
+        if month in [12, 1, 2]:
+            groups['Winter'][0] += float(entry[r'price'])
+            groups['Winter'][1] += 1
+        if month in [3, 4, 5]:
+            groups['Spring'][0] += float(entry[r'price'])
+            groups['Spring'][1] += 1
+        if month in [6, 7, 8]:
+            groups['Summer'][0] += float(entry[r'price'])
+            groups['Summer'][1] += 1
+        if month in [9, 10, 11]:
+            groups['Fall'][0] += float(entry[r'price'])
+            groups['Fall'][1] += 1
+    
+    return groups
 
 def plot_avg_prc_ssn(cache, img_path):
-    pass
+    labels = [] # break cache into lists of labels and averages of data
+    vals = []
+    
+    for k,v in cache.items():
+        labels.append(k)
+        vals.append(v[0] / v[1])
+
+    fig, ax = plt.subplots(figsize=(10,4))
+
+    total_color = len(cache)
+    arr_color = color_css()
+
+    # setup
+    for i in range(len(labels)):
+        plt.bar(labels[i], vals[i], color=arr_color[i+10], width = 0.6, label = labels[i])
+    lg = ax.legend(fontsize='small', bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0., ncol=2)
+    text = ax.text(-0.2,1.05," ", transform=ax.transAxes)
+    ax.axes.xaxis.set_visible(False)
+    plt.tight_layout()
+    plt.title('Average Price by Season')
+    plt.xlabel('Season')
+    plt.ylabel('Seasonal Price')
+    
+    # save
+    buf = BytesIO()
+    os_path = os.path.abspath(os.path.dirname(__file__))
+    fig.savefig(os.path.join(os_path, img_path), format='png',bbox_extra_artists=(lg,text),bbox_inches='tight')
 
