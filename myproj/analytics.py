@@ -40,30 +40,30 @@ def remove_rng(cache, data, label, val):
     cache[label][1] -= 1
 
     # check max, min
-    vals = [d['price'] for d in data['listings'] if d['neighbourhood_group'] == label] # get prices that are part of ng
+    vals = [float(d['price']) for d in data['listings'] if d['neighbourhood_group'] == label] # get prices that are part of ng
 
-    if val > vals.max(): # val was max
-        cache[label][2] = vals.max()
-    elif val < vals.min(): # val was min
-        cache[label][3] = vals.min()
+    if val > max(vals): # val was max
+        cache[label][2] = max(vals)
+    elif val < min(vals): # val was min
+        cache[label][3] = min(vals)
 
 def modify_rng(cache, data, label, new_val, old_val):
     cache[label][0] += new_val - old_val
     # count stays the same
     
     # check max, min
-    vals = [d['price'] for d in data['listings'] if d['neighbourhood_group'] == label] # get prices that are part of ng; might have to use this syntax in the cache fn...
+    vals = [float(d['price']) for d in data['listings'] if d['neighbourhood_group'] == label] # get prices that are part of ng; might have to use this syntax in the cache fn...
 
-    if old_val > vals.max(): # old_val was max
+    if old_val > max(vals): # old_val was max
         if new_val > old_val: # new_val is new max
             cache[label][2] = new_val
         else: # get new max
-            cache[label][2] = vals.max()
-    elif old_val < vals.min(): # old_val was min
+            cache[label][2] = max(vals)
+    elif old_val < min(vals): # old_val was min
         if new_val < old_val: # new_val is new min
             cache[label][2] = new_val
         else: # get new min
-            cache[label][3] = vals.min()
+            cache[label][3] = min(vals)
 
 ### for prc_distro_rgn
 def add_distro(cache, label, val):
@@ -139,20 +139,160 @@ def plot_avg_avail(cache, img_path):
 
 ### average day of week functions
 
+# helper for average_dow_p
+def avg_dow_helper(entries, pipe):
+    days =  [0,0,0,0,0,0,0] # Mon - Sun
+    count = [0,0,0,0,0,0,0]
+    
+    for entry in entries:
+        day = entry[r'date'].split(r'-')
+        day_i = datetime.date(int(day[0]), int(day[1]), int(day[2])).weekday()
+            
+        days[day_i] += float(entry[r'price'])
+        count[day_i] += 1
+
+    pipe.send((days, count))
+    pipe.close()
+
+
 def cache_avg_dow(files):
-    pass
+    
+    data = files['calendar']
+
+    days =  [0,0,0,0,0,0,0] # Mon - Sun
+    count = [0,0,0,0,0,0,0]
+
+    processes = []
+    pipes = []
+    
+    s = 0
+    l = int(len(data) / 4) # found more than 4 processes does not benefit
+    e = l
+    for _ in range(3):
+        parent, child = Pipe()
+        p = Process(target=avg_dow_helper, args=[data[s:e], child])
+        s = e
+        e += l
+        p.start()
+        processes.append(p)
+        pipes.append(parent)
+
+    parent, child = Pipe()
+    p = Process(target=avg_dow_helper, args=[data[s:], child])
+    p.start()
+    processes.append(p)
+    pipes.append(parent)
+
+    for p in range(len(processes)):
+        processes[p].join()
+        result = pipes[p].recv()
+        for i in range(7):
+            days[i] += result[0][i]
+            count[i] += result[1][i]
+    
+    labels = [r'Sunday', r'Monday', r'Tuesday', r'Wednesday', r'Thursday', r'Friday', r'Saturday']
+    ret_val = {}
+    for i in range(7):
+        ret_val[labels[i]] = [days[i], count[i]]
+
+    return ret_val
+
 
 def plot_avg_dow(cache, img_path):
-    pass
+
+    labels = []
+    vals = []
+    for k, v in cache.items():
+        labels.append(k)
+        vals.append(v[0] / v[1])
+
+    # make plot
+    fig, ax = plt.subplots(figsize=(10,4))
+
+    total_color = len(labels)
+    arr_color = color_css()
+
+    # setup
+    for i in range(len(labels)):
+        plt.bar(labels[i], vals[i], color=arr_color[i+10], width = 0.6, label = labels[i])
+    lg = ax.legend(fontsize='small', bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0., ncol=2)
+    text = ax.text(-0.2,1.05," ", transform=ax.transAxes)
+    ax.axes.xaxis.set_visible(False)
+    plt.tight_layout()
+    plt.title('Average Price by Day of the Week')
+    plt.xlabel('Day')
+    plt.ylabel('Daily Price')
+    
+    # save
+    buf = BytesIO()
+    os_path = os.path.abspath(os.path.dirname(__file__))
+    fig.savefig(os.path.join(os_path, img_path), format='png',bbox_extra_artists=(lg,text),bbox_inches='tight') 
 
 
 ### price range by neighbourhood group functions
 
 def cache_prc_rng_ng(files):
-    pass
+    
+    data = files['listings']
+
+    groups = {}
+    # for each entry
+    for entry in data:
+        # get neighbourhood group and avaiablility
+        group = entry[r'neighbourhood_group']
+        price = float(entry[r'price'])
+        
+        if group not in groups:
+            groups[group] = [price, 1, price, price]
+            continue
+        # else
+        groups[group][0] = groups[group][0] + price
+        groups[group][1] = groups[group][1] + 1
+        if price > groups[group][2]: # new max
+            groups[group][2] = price
+        if price < groups[group][3]: # new min
+            groups[group][3] = price
+    
+    return groups
+
 
 def plot_prc_rng_ng(cache, img_path):
-    pass
+    
+    labels = [] # bar name
+    filler = [] # minimum
+    upper = []  # maximum
+    lower = []  # average
+    
+    for k, v in cache.items():
+        labels.append(k)
+        filler.append(v[3])         # fill up to minimum
+        avg = (v[0] / v[1]) - v[3]  # fill minimum up to avg
+        lower.append(avg)           # "
+        upper.append(v[2] - avg)    # fill average up to max
+
+    fil=np.array(filler)
+    upp=np.array(upper)
+    low=np.array(lower)
+    # make plot
+    fig, ax = plt.subplots(figsize=(10,4))
+    # setup
+    plt.barh(labels, fil, color='lightgrey', height= 0.6) # fill up to bottom 
+    plt.barh(labels, upp, color='forestgreen', height= 0.6, left = low+fil , label = "Above Average Price")
+    plt.barh(labels, low, color='maroon', height= 0.6, left= fil, label = 'Below Average Price')
+    lg = ax.legend(fontsize='small', bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)
+    text = ax.text(-0.2,1.05," ", transform=ax.transAxes)
+    #plt.setp(ax.get_xticklabels(), rotation = 90, horizontalalignment='right')
+    #fig.subplots_adjust(bottom=0.25)
+    #ax.axes.xaxis.set_visible(False)
+    plt.tight_layout()
+    plt.title('Price Range of each Neighbourhood Group')
+    plt.xlabel('Neighbourhood Group')
+    plt.ylabel('Daily Price')
+ 
+    # save
+    buf = BytesIO()
+    os_path = os.path.abspath(os.path.dirname(__file__))
+    fig.savefig(os.path.join(os_path, img_path), format='png',bbox_extra_artists=(lg,),bbox_inches='tight') # currently saves to file for testing
 
 
 ### price distribution by region functions
@@ -167,10 +307,46 @@ def plot_prc_distro_rgn(cache, img_path):
 ### average price by minimum nights functions
 
 def cache_avg_prc_min_nts(files):
-    pass
+    
+    data = files['listings']
+
+    days = {}
+    
+    for entry in data:
+        min_night = entry['minimum_nights']
+        price = float(entry['price'])
+        # remove outliers
+        #if int(price) > 400 or int(min_night) > 50:
+        #    continue
+        # else
+        if min_night not in days:
+            days[min_night] = [price, 1]
+            continue
+        # else
+        days[min_night][0] += price
+        days[min_night][1] += 1
+
+    return days
 
 def plot_avg_prc_min_nts(cache, img_path):
-    pass
+    
+    fig, ax = plt.subplots(figsize = (10, 4))
+
+    # ax = fig.add_axes([0, 0, 1, 1])
+    label = []
+    days = []
+    for k, v in cache.items():
+        label.append(k)
+        days.append(v[0] / v[1])
+    ax.bar(label, days)
+
+    # fig = plt.plot(range(len(days)), days)
+    plt.tight_layout()
+    plt.title('Average Price Per Minimum Nights')
+    plt.xlabel('Minimum Nights')
+    plt.ylabel('Average Price')
+    os_path = os.path.abspath(os.path.dirname(__file__))
+    plt.savefig(os.path.join(os_path, img_path), format='png', bbox_inches='tight')
 
 
 ### average price by season functions
