@@ -210,7 +210,7 @@ def average_helper_season(data, pipe):
     groups['Winter'] = [0, 0]
     groups['Spring'] = [0, 0]
     groups['Summer'] = [0, 0]
-    groups['Fall'] = [0, 0]
+    groups['Autumn'] = [0, 0]
 
     for entry in data:
         year = entry[r'date'].split(r'-')
@@ -225,8 +225,8 @@ def average_helper_season(data, pipe):
             groups['Summer'][0] += float(entry[r'price'])
             groups['Summer'][1] += 1
         elif month in [9, 10, 11]:
-            groups['Fall'][0] += float(entry[r'price'])
-            groups['Fall'][1] += 1
+            groups['Autumn'][0] += float(entry[r'price'])
+            groups['Autumn'][1] += 1
     pipe.send(groups)
     pipe.close()
 
@@ -238,7 +238,7 @@ def cache_avg_prc_ssn(files):
     groups['Winter'] = [0, 0]
     groups['Spring'] = [0, 0]
     groups['Summer'] = [0, 0]
-    groups['Fall'] = [0, 0]
+    groups['Autumn'] = [0, 0]
 
     processes = []
     pipes = []
@@ -271,8 +271,8 @@ def cache_avg_prc_ssn(files):
         groups['Spring'][1] += result['Spring'][1]
         groups['Summer'][0] += result['Summer'][0]
         groups['Summer'][1] += result['Summer'][1]
-        groups['Fall'][0] += result['Fall'][0]
-        groups['Fall'][1] += result['Fall'][1]
+        groups['Autumn'][0] += result['Autumn'][0]
+        groups['Autumn'][1] += result['Autumn'][1]
 
     return groups
 
