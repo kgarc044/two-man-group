@@ -83,6 +83,25 @@ def index():
     return render_template('index.html',f_name_list=f_name_list, neighborhood_name_list=neighborhood_name_list, data1=data1, data2=data2, data3=data3, 
     data4=data4, data5=data5, data6=data6, enumerate=enumerate)#, menu=menu)
 
+@app.route('/replot', methods = ['GET'])
+def replot():
+    data = request.args.get("plot")
+
+    print(f'Requested replot of: {data}')
+
+    if data == 2:
+        plot_avg_avail(avg_avail_cache, os.path.join('static', 'images', 'average_availability.png'))
+    elif data == 1:
+        plot_prc_rng_ng(prc_rng_ng_cache, os.path.join("static","images","price_range_ng.png"))
+    elif data == 5:
+        plot_avg_prc_min_nts(avg_prc_min_nts_cache, os.path.join("static","images","average_price_for_min_nights.png"))
+    elif data == 3:
+        plot_avg_dow(avg_dow_cache, os.path.join("static","images","average_dow_p.png"))
+    elif data == 6:
+        plot_avg_prc_ssn(avg_prc_ssn_cache, os.path.join("static","images","average_price_season.png"))
+
+    return ""
+
 @app.route('/region', methods = ['POST'])
 def region():
     f_name_list = files.keys()
@@ -196,9 +215,9 @@ def delfunc():
         remove_distro(prc_distro_rgn_cache, old_val['neighbourhood'], float(old_val['price']))
         remove_avg(avg_prc_min_nts_cache, old_val['minimum_nights'], float(old_val['price']))
 
-        plot_avg_avail(avg_avail_cache, os.path.join('static', 'images', 'average_availability.png'))
-        plot_prc_rng_ng(prc_rng_ng_cache, os.path.join("static","images","price_range_ng.png"))
-        plot_avg_prc_min_nts(avg_prc_min_nts_cache, os.path.join("static","images","average_price_for_min_nights.png"))
+        #plot_avg_avail(avg_avail_cache, os.path.join('static', 'images', 'average_availability.png'))
+        #plot_prc_rng_ng(prc_rng_ng_cache, os.path.join("static","images","price_range_ng.png"))
+        #plot_avg_prc_min_nts(avg_prc_min_nts_cache, os.path.join("static","images","average_price_for_min_nights.png"))
 
     elif file == 'calendar':
         labels = [r'Sunday', r'Monday', r'Tuesday', r'Wednesday', r'Thursday', r'Friday', r'Saturday']
@@ -218,8 +237,8 @@ def delfunc():
         remove_avg(avg_prc_ssn_cache, seasons[season], float(old_val['price']))
 
 
-        plot_avg_dow(avg_dow_cache, os.path.join("static","images","average_dow_p.png"))
-        plot_avg_prc_ssn(avg_prc_ssn_cache, os.path.join("static","images","average_price_season.png"))
+        #plot_avg_dow(avg_dow_cache, os.path.join("static","images","average_dow_p.png"))
+        #plot_avg_prc_ssn(avg_prc_ssn_cache, os.path.join("static","images","average_price_season.png"))
 
     return render_template('searching.html', f_name_list = f_name_list, file=file, arr=arr, neighborhood_name_list=neighborhood_name_list,
         title=title, num_title=num_title, num_list=num_list, num_total=num_total, index=index,
@@ -265,9 +284,9 @@ def edit():
         modify_distro(prc_distro_rgn_cache, temp2['neighbourhood'], float(temp2['price']), float(old_entry['price']))
         modify_avg(avg_prc_min_nts_cache, temp2['minimum_nights'], float(temp2['price']), float(old_entry['price']))
 
-        plot_avg_avail(avg_avail_cache, os.path.join('static', 'images', 'average_availability.png'))
-        plot_prc_rng_ng(prc_rng_ng_cache, os.path.join("static","images","price_range_ng.png"))
-        plot_avg_prc_min_nts(avg_prc_min_nts_cache, os.path.join("static","images","average_price_for_min_nights.png"))
+        #plot_avg_avail(avg_avail_cache, os.path.join('static', 'images', 'average_availability.png'))
+        #plot_prc_rng_ng(prc_rng_ng_cache, os.path.join("static","images","price_range_ng.png"))
+        #plot_avg_prc_min_nts(avg_prc_min_nts_cache, os.path.join("static","images","average_price_for_min_nights.png"))
 
         if temp2['neighbourhood'] not in neighborhood_name_list:
             neighborhood_name_list.append(temp2['neighbourhood'])
@@ -289,8 +308,8 @@ def edit():
         modify_avg(avg_dow_cache, labels[day_i], float(temp2['price']), float(old_entry['price']))
         modify_avg(avg_prc_ssn_cache, seasons[season], float(temp2['price']), float(old_entry['price']))
 
-        plot_avg_dow(avg_dow_cache, os.path.join("static","images","average_dow_p.png"))
-        plot_avg_prc_ssn(avg_prc_ssn_cache, os.path.join("static","images","average_price_season.png"))
+        #plot_avg_dow(avg_dow_cache, os.path.join("static","images","average_dow_p.png"))
+        #plot_avg_prc_ssn(avg_prc_ssn_cache, os.path.join("static","images","average_price_season.png"))
 
     return render_template('searching.html', f_name_list = f_name_list, file=file, arr=arr, index1=index,
         title=title, num_title=num_title, num_list=num_list, num_total=num_total, neighborhood_name_list=neighborhood_name_list,
@@ -348,9 +367,9 @@ def insert():
         add_distro(prc_distro_rgn_cache, temp['neighbourhood'], float(temp['price']))
         add_avg(avg_prc_min_nts_cache, int(temp['minimum_nights']), float(temp['price']))
 
-        plot_avg_avail(avg_avail_cache, os.path.join('static', 'images', 'average_availability.png'))
-        plot_prc_rng_ng(prc_rng_ng_cache, os.path.join("static","images","price_range_ng.png"))
-        plot_avg_prc_min_nts(avg_prc_min_nts_cache, os.path.join("static","images","average_price_for_min_nights.png"))
+        #plot_avg_avail(avg_avail_cache, os.path.join('static', 'images', 'average_availability.png'))
+        #plot_prc_rng_ng(prc_rng_ng_cache, os.path.join("static","images","price_range_ng.png"))
+        #plot_avg_prc_min_nts(avg_prc_min_nts_cache, os.path.join("static","images","average_price_for_min_nights.png"))
 
         if temp2['neighbourhood'] not in neighborhood_name_list:
             neighborhood_name_list.append(temp2['neighbourhood'])
@@ -372,8 +391,8 @@ def insert():
         add_avg(avg_dow_cache, labels[day_i], float(temp['price']))
         add_avg(avg_prc_ssn_cache, seasons[season], float(temp['price']))
 
-        plot_avg_dow(avg_dow_cache, os.path.join("static","images","average_dow_p.png"))
-        plot_avg_prc_ssn(avg_prc_ssn_cache, os.path.join("static","images","average_price_season.png"))
+        #plot_avg_dow(avg_dow_cache, os.path.join("static","images","average_dow_p.png"))
+        #plot_avg_prc_ssn(avg_prc_ssn_cache, os.path.join("static","images","average_price_season.png"))
 
     return render_template('searching.html', f_name_list = f_name_list, file=file, arr=arr,
         title=title, num_title=num_title, num_list=num_list, num_total=num_total, neighborhood_name_list=neighborhood_name_list,
