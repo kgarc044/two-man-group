@@ -310,6 +310,13 @@ h1.bkup-msg{
 .dropdown:hover .dropbtn {
 background: linear-gradient(45deg, #aebddf, rgb(24, 23, 23));
 }
+
+#updateAna{
+  background-color:tomato ;
+}
+#updateAna:hover{
+  background-color:#cdcde2 ;
+}
 /*----------CVS Table--------*/
 
 table.blueTable {

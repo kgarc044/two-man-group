@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, json
+from flask import Flask, render_template, request, session, json, redirect
 #from flask_wtf import FlaskForm
 #from wtforms import StringField, SubmitField
 import time
@@ -83,24 +83,27 @@ def index():
     return render_template('index.html',f_name_list=f_name_list, neighborhood_name_list=neighborhood_name_list, data1=data1, data2=data2, data3=data3, 
     data4=data4, data5=data5, data6=data6, enumerate=enumerate)#, menu=menu)
 
-@app.route('/replot', methods = ['GET'])
+@app.route('/replot', methods = ['POST','GET'])
 def replot():
-    data = request.args.get("plot")
+    f_name_list = files.keys()
+    arr = session.get('arr', None)
+    file = session.get('file', None)
+    num_list = range(session.get('num_list', None))
+    num_total = range(session.get('num_total', None))
+    title = list(files[file][0].keys())
+    num_title = range(len(title))
 
-    print(f'Requested replot of: {data}')
-
-    if data == 2:
+    if file == 'listings':
         plot_avg_avail(avg_avail_cache, os.path.join('static', 'images', 'average_availability.png'))
-    elif data == 1:
         plot_prc_rng_ng(prc_rng_ng_cache, os.path.join("static","images","price_range_ng.png"))
-    elif data == 5:
         plot_avg_prc_min_nts(avg_prc_min_nts_cache, os.path.join("static","images","average_price_for_min_nights.png"))
-    elif data == 3:
-        plot_avg_dow(avg_dow_cache, os.path.join("static","images","average_dow_p.png"))
-    elif data == 6:
-        plot_avg_prc_ssn(avg_prc_ssn_cache, os.path.join("static","images","average_price_season.png"))
 
-    return ""
+    elif file == 'calendar':
+        plot_avg_dow(avg_dow_cache, os.path.join("static","images","average_dow_p.png"))
+        plot_avg_prc_ssn(avg_prc_ssn_cache, os.path.join("static","images","average_price_season.png"))
+    return render_template('searching.html', f_name_list = f_name_list, file=file, arr=arr, neighborhood_name_list=neighborhood_name_list,
+        title=title, num_title=num_title, num_list=num_list, num_total=num_total, index=index,
+        data1=data1, data2=data2, data3=data3, data4=data4, data5=data5, data6=data6, enumerate=enumerate)
 
 @app.route('/region', methods = ['POST'])
 def region():
@@ -115,12 +118,16 @@ def region():
     return render_template('index.html', f_name_list=f_name_list, neighborhood_name_list=neighborhood_name_list, data1=data1, data2=data2, data3=data3, 
     data4=data4, data5=data5, data6=data6, enumerate=enumerate)
 
-@app.route('/update', methods =['POST'])
+@app.route('/update', methods =['GET','POST'])
 def update():
     f_name_list = files.keys()
     arr = []
-    file = request.form['fname']
-    session['file'] = file
+    if request.method == 'POST':
+        file = request.form['fname']
+        session['file'] = file
+    else:
+        file = session.get('file',None)
+
     title = list(files[file][0].keys()) # get keys from first entry
     num_title = range(len(title))
     # for entry in files[file]:#[file]:
@@ -279,15 +286,20 @@ def edit():
     session['arr'] = arr
 
     if file == 'listings':
+        print("doing if loop")
         modify_avg(avg_avail_cache, temp2['neighbourhood_group'], int(temp2['availability_365']), int(old_entry['availability_365']))
         modify_rng(prc_rng_ng_cache, files, temp2['neighbourhood_group'], float(temp2['price']), float(old_entry['price']))
         modify_distro(prc_distro_rgn_cache, temp2['neighbourhood'], float(temp2['price']), float(old_entry['price']))
         modify_avg(avg_prc_min_nts_cache, temp2['minimum_nights'], float(temp2['price']), float(old_entry['price']))
 
-        #plot_avg_avail(avg_avail_cache, os.path.join('static', 'images', 'average_availability.png'))
-        #plot_prc_rng_ng(prc_rng_ng_cache, os.path.join("static","images","price_range_ng.png"))
-        #plot_avg_prc_min_nts(avg_prc_min_nts_cache, os.path.join("static","images","average_price_for_min_nights.png"))
-
+        try:
+            if request.values['anaup'] == 0:
+                plot_avg_avail(avg_avail_cache, os.path.join('static', 'images', 'average_availability.png'))
+                plot_prc_rng_ng(prc_rng_ng_cache, os.path.join("static","images","price_range_ng.png"))
+                plot_avg_prc_min_nts(avg_prc_min_nts_cache, os.path.join("static","images","average_price_for_min_nights.png"))
+        except:
+            print("hi")
+        
         if temp2['neighbourhood'] not in neighborhood_name_list:
             neighborhood_name_list.append(temp2['neighbourhood'])
 
@@ -371,8 +383,8 @@ def insert():
         #plot_prc_rng_ng(prc_rng_ng_cache, os.path.join("static","images","price_range_ng.png"))
         #plot_avg_prc_min_nts(avg_prc_min_nts_cache, os.path.join("static","images","average_price_for_min_nights.png"))
 
-        if temp2['neighbourhood'] not in neighborhood_name_list:
-            neighborhood_name_list.append(temp2['neighbourhood'])
+        if temp['neighbourhood'] not in neighborhood_name_list:
+            neighborhood_name_list.append(temp['neighbourhood'])
 
     elif file == 'calendar':
         labels = [r'Sunday', r'Monday', r'Tuesday', r'Wednesday', r'Thursday', r'Friday', r'Saturday']

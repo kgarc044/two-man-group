@@ -55,22 +55,22 @@ def remove_rng(cache, data, label, val):
         cache[label][3] = min(vals)
 
 def modify_rng(cache, data, label, new_val, old_val):
+    print(f"{new_val} {old_val}")
     cache[label][0] += new_val - old_val
     # count stays the same
     
     # check max, min
     vals = [float(d['price']) for d in data['listings'] if d['neighbourhood_group'] == label] # get prices that are part of ng; might have to use this syntax in the cache fn...
-
-    if old_val > max(vals): # old_val was max
-        if new_val > old_val: # new_val is new max
-            cache[label][2] = new_val
-        else: # get new max
-            cache[label][2] = max(vals)
-    elif old_val < min(vals): # old_val was min
-        if new_val < old_val: # new_val is new min
-            cache[label][2] = new_val
-        else: # get new min
-            cache[label][3] = min(vals)
+    print(max(vals))
+    if new_val >= max(vals):
+        cache[label][2] = new_val
+    elif old_val == max(vals):
+        cache[label][2] = max(vals)
+    elif new_val <= min(vals):
+        cache[label][3] = new_val
+    elif old_val == min(vals):
+        cache[label][3] = min(vals)
+    print(f"{cache[label]}")
 
 ### for prc_distro_rgn
 def add_distro(cache, label, val):
@@ -271,7 +271,7 @@ def cache_prc_rng_ng(files):
 
 
 def plot_prc_rng_ng(cache, img_path):
-    
+
     labels = [] # bar name
     filler = [] # minimum
     upper = []  # maximum
@@ -306,8 +306,9 @@ def plot_prc_rng_ng(cache, img_path):
     # save
     buf = BytesIO()
     os_path = os.path.abspath(os.path.dirname(__file__))
+    print(f"os path: {os.path.join(os_path, img_path)}")
     fig.savefig(os.path.join(os_path, img_path), format='png',bbox_extra_artists=(lg,),bbox_inches='tight') # currently saves to file for testing
-
+    print("done plotting")
 
 ### price distribution by region functions
 

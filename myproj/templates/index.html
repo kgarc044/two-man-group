@@ -56,7 +56,7 @@
                             function togglePopup2(clicked_id) {
                                 document.getElementById("input-field").innerHTML = `{% for idx,title in enumerate(title) %}<p>{{title}}</p>\
                                 Field: {{idx + 1}} <input id="input-something" name = "h{{idx}}" value="" ="text" class="validate">{% endfor %}\
-                                <button id="second-button" value="'+clicked_id+'" name="row"><img src="{{ url_for('static', filename='images/save.png') }}" id="save"></button></div>`;
+                                <button id="second-button" value="'+clicked_id+'" name="row"><img name = "anaup" value = 1 src="{{ url_for('static', filename='images/save.png') }}" id="save"></button></div>`;
                                 document.getElementById("popingup").classList.toggle("active");
                             }
                         </script>
@@ -75,12 +75,15 @@
                         <button class="dropbtn" style="width:300px;" id = "analyzer_bnt">
                         <img style = "width: 25;height: 25;position: absolute;left: 80;top: 15;" src="{{ url_for('static', filename='images/Ana.png') }}" alt="logo">Analyzer</button>
                         <div class = "dropdown-content">
-                            <button onclick="replot(this.id)" id=1> Price Range By Neighbourhood Group </button>
-                            <button onclick="replot(this.id)" id=2> Average Availability By Neighbourhood Group </button>
-                            <button onclick="replot(this.id)" id=3> Average Price By Day of The Week </button>
-                            <button onclick="replot(this.id)" id=4> Price Distribution by Region</button>
-                            <button onclick="replot(this.id)" id=5> Average Price for Minimum Nights </button>
-                            <button onclick="replot(this.id)" id=6> Average Price By Season</button>
+                            
+                            <button onclick="popup(this.id)" id=1> Price Range By Neighbourhood Group </button>
+                            <button onclick="popup(this.id)" id=2> Average Availability By Neighbourhood Group </button>
+                            <button onclick="popup(this.id)" id=3> Average Price By Day of The Week </button>
+                            <button onclick="popup(this.id)" id=4> Price Distribution by Region</button>
+                            <button onclick="popup(this.id)" id=5> Average Price for Minimum Nights </button>
+                            <button onclick="popup(this.id)" id=6> Average Price By Season</button>
+                            <form action="/replot" method="POST"><button id = "updateAna" type="submit">Update Analyzer</button></form>
+
                             <script>
                                 function popup(ids) {
                                     if(ids == 1){
@@ -97,12 +100,11 @@
                                     document.getElementById("analyzer6-box").classList.toggle("active");}
                                 }
                                 
-                                function replot(id) {
+                                /*function replot(id) {
                                     var xhttp = new XMLHttpRequest();
                                     xhttp.open("GET", "replot?plot=" + id, false);
-                                    xhttp.send();
-                                    popup(id);
-                                }
+                                    xhttp.send(popup(id));
+                                }*/
                             </script>
                         </div>
                     </div>

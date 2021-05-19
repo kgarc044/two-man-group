@@ -5,4 +5,5 @@ Lib/
 Scripts/
 *.cfg
 test.py
+static/images/
 ../.vscode/cs180-workspace-may5.code-workspace
